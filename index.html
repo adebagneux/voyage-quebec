@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Notre Voyage">
+<meta name="theme-color" content="#1d1b17">
+<title>Notre voyage · Québec 2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#f6f5f1;--card:#fff;--ink:#1d1b17;--soft:#6d665c;--line:#e6e2da;--done:#1f7a4d;--today:#c9741d;--soon:#2f6db0}
+  html,body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto}
+  header{padding:calc(env(safe-area-inset-top) + 14px) 16px 10px;text-align:center}
+  header h1{font-size:23px;letter-spacing:-.02em}
+  header .sub{font-size:12px;color:var(--soft);text-transform:uppercase;letter-spacing:.12em;margin-top:3px}
+
+  .now{margin:14px 16px 0}
+  .bigcount{background:var(--ink);color:#fff;border-radius:16px;padding:16px;text-align:center;margin-bottom:10px}
+  .bigcount .n{font-size:32px;font-weight:800;line-height:1}
+  .bigcount .l{font-size:12px;opacity:.85;margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
+  .nowcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .nowcard .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--today)}
+  .nowcard.tom .k{color:var(--soon)}
+  .nowcard .t{font-size:18px;font-weight:700;margin-top:3px}
+  .nowcard .d{font-size:13.5px;color:var(--soft);margin-top:4px;line-height:1.45}
+
+  #map{height:48vh;min-height:300px;margin:14px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#e9eef0;z-index:1}
+  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:10px 16px;font-size:12px;color:var(--soft)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .marker{width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff}
+  .marker span{transform:rotate(45deg);font-size:16px}
+  .leaflet-popup-content{margin:12px 14px;font-family:inherit}
+  .pop .pt{font-size:15px;font-weight:700}.pop .pd{font-size:12px;color:var(--soft);margin:2px 0 8px}
+  .pop .px{font-size:13px;line-height:1.4;margin-bottom:10px}
+  .pop .btns{display:flex;gap:6px;flex-wrap:wrap}
+  .pop a{flex:1;text-align:center;text-decoration:none;font-size:12px;font-weight:700;padding:8px 6px;border-radius:9px;white-space:nowrap}
+  .pop a.m{background:#eaf1f8;color:#2f6db0}.pop a.i{background:#fbf1e6;color:#c9741d}.pop a.e{background:#eef7f0;color:#1f7a4d}
+
+  h2.sec{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:22px 16px 12px}
+  .stages{padding:0 16px 40px}
+  .stage{background:var(--card);border:1px solid var(--line);border-left-width:5px;border-radius:14px;padding:13px 15px;margin-bottom:11px;cursor:pointer}
+  .stage.done{border-left-color:var(--done)}.stage.today{border-left-color:var(--today);box-shadow:0 3px 14px rgba(201,116,29,.18)}.stage.soon{border-left-color:var(--soon)}
+  .stage .row1{display:flex;align-items:center;gap:9px}
+  .stage .emoji{font-size:22px}.stage .ttl{font-size:16px;font-weight:700}
+  .stage .badge{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:20px}
+  .badge.done{background:#eef7f0;color:var(--done)}.badge.today{background:#fbf1e6;color:var(--today)}.badge.soon{background:#eaf1f8;color:var(--soon)}
+  .stage .dates{font-size:12.5px;color:var(--soft);margin:6px 0 0 31px}
+  .stage .plan{font-size:14px;line-height:1.5;margin:7px 0 0 31px}
+  .stage .links{margin:9px 0 0 31px;display:flex;gap:6px;flex-wrap:wrap}
+  .stage .links a{font-size:11.5px;font-weight:700;text-decoration:none;padding:6px 10px;border-radius:9px}
+  .stage .links a.m{background:#eaf1f8;color:#2f6db0}.stage .links a.i{background:#fbf1e6;color:#c9741d}.stage .links a.e{background:#eef7f0;color:#1f7a4d}
+  footer{text-align:center;color:var(--soft);font-size:12px;padding:0 16px 40px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Notre voyage 🍁</h1>
+    <div class="sub">Québec · 10 → 29 août 2026</div>
+  </header>
+
+  <div class="now" id="now">
+    <div class="bigcount"><div class="n" id="cnt">J-11</div><div class="l">avant le grand départ ✈️</div></div>
+  </div>
+
+  <div id="map"></div>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--done)"></i> déjà fait</span>
+    <span><i class="dot" style="background:var(--today)"></i> en ce moment</span>
+    <span><i class="dot" style="background:var(--soon)"></i> à venir</span>
+  </div>
+
+  <h2 class="sec">🗺️ Le programme · étape par étape</h2>
+  <div class="stages" id="stages"><!-- rempli aussi statiquement ci-dessous --></div>
+
+  <footer>Touche une étape pour la retrouver sur la carte.<br>La carte et les statuts se mettent à jour tout seuls chaque jour du voyage. 💛</footer>
+</div>
+
+<script>
+/* Données du voyage. Tout le programme est écrit ici ET affiché en clair même si la carte ne charge pas. */
+const STAGES=[
+ {emoji:"🏙️",title:"Montréal — l'arrivée",start:"2026-08-10",end:"2026-08-12",lat:45.4976,lng:-73.5806,dates:"10 → 12 août · 2 nuits",plan:"Atterrissage à 21h, 2 nuits à l'hôtel Le Cantlie. Journée en famille, on récupère la voiture, dîner chez les Farès."},
+ {emoji:"🛩️",title:"La Tuque — l'hydravion",start:"2026-08-12",end:"2026-08-12",lat:47.4370,lng:-72.7820,dates:"12 août · l'envol",plan:"Après la route depuis Montréal, décollage en hydravion à 15h30 vers la Seigneurie du Triton. Le grand frisson !"},
+ {emoji:"🛶",title:"Seigneurie du Triton",start:"2026-08-12",end:"2026-08-14",lat:47.6330,lng:-72.2630,dates:"12 → 14 août · 2 nuits",plan:"Chalet Biron privatif sur le lac Édouard. Canot, kayak, baignade, repas en forêt, feux le soir. La nature pure."},
+ {emoji:"🏔️",title:"Mont-Tremblant",start:"2026-08-14",end:"2026-08-17",lat:46.2094,lng:-74.5850,dates:"14 → 17 août · 3 nuits",plan:"Condo dans le village piétonnier : restos, télécabine, plage et lac à pied. Détente et vie de village."},
+ {emoji:"🏙️",title:"Montréal — transition",start:"2026-08-17",end:"2026-08-18",lat:45.4976,lng:-73.5806,dates:"17 → 18 août · 1 nuit",plan:"Retour à Montréal, on rend la voiture. 1 nuit au Cantlie avant le grand départ en camping-car."},
+ {emoji:"🚐",title:"Départ camping-car",start:"2026-08-18",end:"2026-08-18",lat:45.4970,lng:-73.4040,dates:"18 août · on prend le van",plan:"On récupère le camping-car Fraserway à Saint-Hubert, on charge, et cap sur Québec !"},
+ {emoji:"⚜️",title:"Région de Québec",start:"2026-08-18",end:"2026-08-20",lat:46.8571,lng:-71.2880,dates:"18 → 20 août · 2 nuits",plan:"Camping de la Joie à Charlesbourg. Vieux-Québec, la chute Montmorency. 2 nuits."},
+ {emoji:"🏞️",title:"Fjord du Saguenay",start:"2026-08-20",end:"2026-08-22",lat:48.2620,lng:-70.1990,dates:"20 → 22 août · 2 nuits",plan:"Parc national du Fjord à Rivière-Éternité. Kayak de mer en famille au cœur du fjord. Paysages à couper le souffle."},
+ {emoji:"🐋",title:"Tadoussac — les baleines",start:"2026-08-22",end:"2026-08-23",lat:48.1417,lng:-69.7208,dates:"22 → 23 août · 1 nuit",plan:"Safari aux baleines en Zodiac à 15h15 ! Nuit au Camping Bon-Désir à Grandes-Bergeronnes, face au fleuve."},
+ {emoji:"🌲",title:"Parc national d'Oka",start:"2026-08-23",end:"2026-08-24",lat:45.4664,lng:-74.0553,dates:"23 → 24 août · 1 nuit",plan:"Grande route de retour (~6h) puis nuit au bord du lac à Oka. Dernière soirée en camping-car."},
+ {emoji:"🎓",title:"Montréal — McGill & au revoir",start:"2026-08-24",end:"2026-08-29",lat:45.5019,lng:-73.5555,dates:"24 → 29 août · 5 nuits",plan:"Penthouse de l'Hôtel Epik dans le Vieux-Montréal. On installe Hanaé à McGill. Nos derniers jours tous les six. 💛"}
+];
+const COL={done:"#1f7a4d",today:"#c9741d",soon:"#2f6db0"};
+const LBL={done:"Fait ✓",today:"En ce moment",soon:"À venir"};
+const today=new Date().toISOString().slice(0,10);
+const tomorrow=new Date(Date.now()+864e5).toISOString().slice(0,10);
+const statusOf=(s,d)=>d>s.end?"done":(d<s.start?"soon":"today");
+const stageOn=d=>{const m=STAGES.filter(s=>d>=s.start&&d<=s.end);return m.length?(m.find(s=>s.start===d)||m[m.length-1]):null;};
+const mapsUrl=s=>'https://www.google.com/maps/search/?api=1&query='+s.lat+','+s.lng;
+const dirUrl=s=>'https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng;
+const earthUrl=s=>'https://earth.google.com/web/@'+s.lat+','+s.lng+',1500a,9000d,35y,0h,45t,0r';
+
+/* 1) LE PROGRAMME — écrit en clair, indépendant de la carte */
+const cont=document.getElementById('stages');
+cont.innerHTML=STAGES.map((s,i)=>{
+  const st=statusOf(s,today);
+  return '<div class="stage '+st+'" data-i="'+i+'">'+
+    '<div class="row1"><span class="emoji">'+s.emoji+'</span><span class="ttl">'+s.title+'</span>'+
+    '<span class="badge '+st+'">'+LBL[st]+'</span></div>'+
+    '<div class="dates">'+s.dates+'</div><div class="plan">'+s.plan+'</div>'+
+    '<div class="links"><a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a>'+
+    '<a class="i" target="_blank" href="'+dirUrl(s)+'">🧭 Itinéraire</a>'+
+    '<a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 Vue 3D</a></div></div>';
+}).join('');
+
+/* 2) AUJOURD'HUI / DEMAIN */
+const now=document.getElementById('now');
+const started=today>=STAGES[0].start, finished=today>STAGES[STAGES.length-1].end;
+if(!started){
+  const days=Math.ceil((new Date(STAGES[0].start)-new Date(today))/864e5);
+  document.getElementById('cnt').textContent='J-'+days;
+  now.innerHTML+='<div class="nowcard"><div class="k">Première étape</div><div class="t">'+STAGES[0].emoji+' '+STAGES[0].title+'</div><div class="d">'+STAGES[0].plan+'</div></div>';
+}else if(finished){
+  now.innerHTML='<div class="nowcard"><div class="k">C\'est fini</div><div class="t">🍁 Un voyage inoubliable</div><div class="d">Merci pour ces moments tous ensemble !</div></div>';
+}else{
+  const t=stageOn(today),d=stageOn(tomorrow);
+  now.innerHTML='';
+  if(t)now.innerHTML+='<div class="nowcard"><div class="k">📍 Aujourd\'hui</div><div class="t">'+t.emoji+' '+t.title+'</div><div class="d">'+t.plan+'</div></div>';
+  if(d)now.innerHTML+='<div class="nowcard tom"><div class="k">👉 Demain</div><div class="t">'+d.emoji+' '+d.title+'</div><div class="d">'+d.plan+'</div></div>';
+}
+
+/* 3) LA CARTE — bonus par-dessus. Si Leaflet ne charge pas, le programme reste visible. */
+function initMap(){
+  if(typeof L==='undefined'){document.getElementById('map').style.display='none';return;}
+  const map=L.map('map',{scrollWheelZoom:false}).setView([46.8,-72.5],6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
+  for(let i=0;i<STAGES.length-1;i++){
+    const a=STAGES[i],b=STAGES[i+1],legDone=today>b.end;
+    L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color:legDone?COL.done:COL.soon,weight:4,opacity:legDone?.9:.55,dashArray:legDone?null:"2,9",lineCap:"round"}).addTo(map);
+  }
+  const markers=[];
+  STAGES.forEach(s=>{
+    const st=statusOf(s,today);
+    const icon=L.divIcon({className:'',iconSize:[34,34],iconAnchor:[17,34],popupAnchor:[0,-32],html:'<div class="marker" style="background:'+COL[st]+'"><span>'+s.emoji+'</span></div>'});
+    const html='<div class="pop"><div class="pt">'+s.emoji+' '+s.title+'</div><div class="pd">'+s.dates+'</div><div class="px">'+s.plan+'</div><div class="btns">'+
+      '<a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a><a class="i" target="_blank" href="'+dirUrl(s)+'">🧭 Itinéraire</a><a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 3D</a></div></div>';
+    markers.push(L.marker([s.lat,s.lng],{icon}).addTo(map).bindPopup(html));
+  });
+  map.fitBounds(L.latLngBounds(STAGES.map(s=>[s.lat,s.lng])).pad(0.15));
+  document.querySelectorAll('.stage').forEach(el=>{
+    el.onclick=e=>{ if(e.target.closest('a'))return; const i=+el.dataset.i; map.flyTo([STAGES[i].lat,STAGES[i].lng],9,{duration:.8}); markers[i].openPopup(); document.getElementById('map').scrollIntoView({behavior:'smooth',block:'start'}); };
+  });
+}
+if(document.readyState!=='loading')initMap();else document.addEventListener('DOMContentLoaded',initMap);
+</script>
+</body>
+</html>
