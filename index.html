@@ -10,24 +10,29 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  :root{--bg:#f6f5f1;--card:#fff;--ink:#1d1b17;--soft:#6d665c;--line:#e6e2da;--done:#1f7a4d;--today:#c9741d;--soon:#2f6db0}
+  :root{--bg:#f6f5f1;--card:#fff;--ink:#1d1b17;--soft:#6d665c;--line:#e6e2da;--done:#1f7a4d;--today:#c9741d;--soon:#2f6db0;
+    --voiture:#2f6db0;--camper:#0e8a8a;--avion:#7a4bb0;--pied:#6d665c}
   html,body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
   .wrap{max-width:720px;margin:0 auto}
-  header{padding:calc(env(safe-area-inset-top) + 14px) 16px 10px;text-align:center}
+  header{padding:calc(env(safe-area-inset-top) + 14px) 16px 8px;text-align:center}
   header h1{font-size:23px;letter-spacing:-.02em}
   header .sub{font-size:12px;color:var(--soft);text-transform:uppercase;letter-spacing:.12em;margin-top:3px}
 
-  .now{margin:14px 16px 0}
+  .glance{margin:12px 16px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:13px;line-height:1.55;color:var(--soft)}
+  .glance b{color:var(--ink)}
+  .glance .t{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);margin-bottom:5px}
+
+  .now{margin:12px 16px 0}
   .bigcount{background:var(--ink);color:#fff;border-radius:16px;padding:16px;text-align:center;margin-bottom:10px}
   .bigcount .n{font-size:32px;font-weight:800;line-height:1}
   .bigcount .l{font-size:12px;opacity:.85;margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
-  .nowcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .nowcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
   .nowcard .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--today)}
   .nowcard.tom .k{color:var(--soon)}
   .nowcard .t{font-size:18px;font-weight:700;margin-top:3px}
   .nowcard .d{font-size:13.5px;color:var(--soft);margin-top:4px;line-height:1.45}
 
-  #map{height:48vh;min-height:300px;margin:14px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#e9eef0;z-index:1}
+  #map{height:48vh;min-height:300px;margin:12px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#e9eef0;z-index:1}
   .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:10px 16px;font-size:12px;color:var(--soft)}
   .legend span{display:inline-flex;align-items:center;gap:5px}
   .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
@@ -42,17 +47,32 @@
 
   h2.sec{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:22px 16px 12px}
   .stages{padding:0 16px 40px}
-  .stage{background:var(--card);border:1px solid var(--line);border-left-width:5px;border-radius:14px;padding:13px 15px;margin-bottom:11px;cursor:pointer}
+  .stage{background:var(--card);border:1px solid var(--line);border-left-width:5px;border-radius:14px;padding:13px 15px;margin-bottom:11px}
   .stage.done{border-left-color:var(--done)}.stage.today{border-left-color:var(--today);box-shadow:0 3px 14px rgba(201,116,29,.18)}.stage.soon{border-left-color:var(--soon)}
   .stage .row1{display:flex;align-items:center;gap:9px}
   .stage .emoji{font-size:22px}.stage .ttl{font-size:16px;font-weight:700}
   .stage .badge{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:20px}
   .badge.done{background:#eef7f0;color:var(--done)}.badge.today{background:#fbf1e6;color:var(--today)}.badge.soon{background:#eaf1f8;color:var(--soon)}
-  .stage .dates{font-size:12.5px;color:var(--soft);margin:6px 0 0 31px}
+  .meta{margin:7px 0 0 31px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .meta .dates{font-size:12.5px;color:var(--soft)}
+  .transp{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff}
   .stage .plan{font-size:14px;line-height:1.5;margin:7px 0 0 31px}
   .stage .links{margin:9px 0 0 31px;display:flex;gap:6px;flex-wrap:wrap}
   .stage .links a{font-size:11.5px;font-weight:700;text-decoration:none;padding:6px 10px;border-radius:9px}
   .stage .links a.m{background:#eaf1f8;color:#2f6db0}.stage .links a.i{background:#fbf1e6;color:#c9741d}.stage .links a.e{background:#eef7f0;color:#1f7a4d}
+  details.rb{margin:10px 0 0 31px;border-top:1px dashed var(--line);padding-top:9px}
+  details.rb summary{font-size:12.5px;font-weight:700;color:var(--soon);cursor:pointer;list-style:none}
+  details.rb summary::-webkit-details-marker{display:none}
+  details.rb summary::before{content:"▸ ";}
+  details.rb[open] summary::before{content:"▾ ";}
+  .rb .field{font-size:13px;line-height:1.5;margin:8px 0 0;display:flex;gap:7px}
+  .rb .field .ic{flex:0 0 18px;text-align:center}
+  .rb .field b{font-weight:600}
+  .rb .field a{color:var(--soon);text-decoration:none}
+  .rb .around{margin:9px 0 0;background:#f3f6f4;border-radius:10px;padding:9px 11px;font-size:13px;line-height:1.5}
+  .rb .around .h{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--done);margin-bottom:3px}
+  .rb ul{margin:6px 0 0 4px;padding-left:16px}
+  .rb li{font-size:13px;line-height:1.5;margin-bottom:2px}
   footer{text-align:center;color:var(--soft);font-size:12px;padding:0 16px 40px;line-height:1.6}
 </style>
 </head>
@@ -62,6 +82,14 @@
     <h1>Notre voyage 🍁</h1>
     <div class="sub">Québec · 10 → 29 août 2026</div>
   </header>
+
+  <div class="glance">
+    <div class="t">🧭 Le voyage en un coup d'œil</div>
+    ✈️ Vol jusqu'à Montréal, puis deux grands temps :<br>
+    🚗 <b>En voiture (11 → 17 août)</b> : Montréal, l'hydravion vers le Triton, Mont-Tremblant.<br>
+    🚐 <b>En camping-car (18 → 24 août)</b> : Québec, le fjord du Saguenay, les baleines de Tadoussac.<br>
+    🎓 Retour à Montréal (24 → 29) pour installer Hanaé à McGill.
+  </div>
 
   <div class="now" id="now">
     <div class="bigcount"><div class="n" id="cnt">J-11</div><div class="l">avant le grand départ ✈️</div></div>
@@ -74,52 +102,128 @@
     <span><i class="dot" style="background:var(--soon)"></i> à venir</span>
   </div>
 
-  <h2 class="sec">🗺️ Le programme · étape par étape</h2>
-  <div class="stages" id="stages"><!-- rempli aussi statiquement ci-dessous --></div>
+  <h2 class="sec">🗺️ Le programme · le road book</h2>
+  <div class="stages" id="stages"></div>
 
-  <footer>Touche une étape pour la retrouver sur la carte.<br>La carte et les statuts se mettent à jour tout seuls chaque jour du voyage. 💛</footer>
+  <footer>Touche « Voir le détail » pour tout savoir sur chaque étape.<br>La carte et les statuts se mettent à jour tout seuls chaque jour. 💛</footer>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* Données du voyage. Tout le programme est écrit ici ET affiché en clair même si la carte ne charge pas. */
+const TR={avion:{c:"#7a4bb0",l:"✈️ Vol"},voiture:{c:"#2f6db0",l:"🚗 Voiture"},hydravion:{c:"#c9741d",l:"🛩️ Hydravion"},camper:{c:"#0e8a8a",l:"🚐 Camping-car"},pied:{c:"#6d665c",l:"🚶 À pied / taxi"}};
+
 const STAGES=[
- {emoji:"🏙️",title:"Montréal — l'arrivée",start:"2026-08-10",end:"2026-08-12",lat:45.4976,lng:-73.5806,dates:"10 → 12 août · 2 nuits",plan:"Atterrissage à 21h, 2 nuits à l'hôtel Le Cantlie. Journée en famille, on récupère la voiture, dîner chez les Farès."},
- {emoji:"🛩️",title:"La Tuque — l'hydravion",start:"2026-08-12",end:"2026-08-12",lat:47.4370,lng:-72.7820,dates:"12 août · l'envol",plan:"Après la route depuis Montréal, décollage en hydravion à 15h30 vers la Seigneurie du Triton. Le grand frisson !"},
- {emoji:"🛶",title:"Seigneurie du Triton",start:"2026-08-12",end:"2026-08-14",lat:47.6330,lng:-72.2630,dates:"12 → 14 août · 2 nuits",plan:"Chalet Biron privatif sur le lac Édouard. Canot, kayak, baignade, repas en forêt, feux le soir. La nature pure."},
- {emoji:"🏔️",title:"Mont-Tremblant",start:"2026-08-14",end:"2026-08-17",lat:46.2094,lng:-74.5850,dates:"14 → 17 août · 3 nuits",plan:"Condo dans le village piétonnier : restos, télécabine, plage et lac à pied. Détente et vie de village."},
- {emoji:"🏙️",title:"Montréal — transition",start:"2026-08-17",end:"2026-08-18",lat:45.4976,lng:-73.5806,dates:"17 → 18 août · 1 nuit",plan:"Retour à Montréal, on rend la voiture. 1 nuit au Cantlie avant le grand départ en camping-car."},
- {emoji:"🚐",title:"Départ camping-car",start:"2026-08-18",end:"2026-08-18",lat:45.4970,lng:-73.4040,dates:"18 août · on prend le van",plan:"On récupère le camping-car Fraserway à Saint-Hubert, on charge, et cap sur Québec !"},
- {emoji:"⚜️",title:"Région de Québec",start:"2026-08-18",end:"2026-08-20",lat:46.8571,lng:-71.2880,dates:"18 → 20 août · 2 nuits",plan:"Camping de la Joie à Charlesbourg. Vieux-Québec, la chute Montmorency. 2 nuits."},
- {emoji:"🏞️",title:"Fjord du Saguenay",start:"2026-08-20",end:"2026-08-22",lat:48.2620,lng:-70.1990,dates:"20 → 22 août · 2 nuits",plan:"Parc national du Fjord à Rivière-Éternité. Kayak de mer en famille au cœur du fjord. Paysages à couper le souffle."},
- {emoji:"🐋",title:"Tadoussac — les baleines",start:"2026-08-22",end:"2026-08-23",lat:48.1417,lng:-69.7208,dates:"22 → 23 août · 1 nuit",plan:"Safari aux baleines en Zodiac à 15h15 ! Nuit au Camping Bon-Désir à Grandes-Bergeronnes, face au fleuve."},
- {emoji:"🌲",title:"Parc national d'Oka",start:"2026-08-23",end:"2026-08-24",lat:45.4664,lng:-74.0553,dates:"23 → 24 août · 1 nuit",plan:"Grande route de retour (~6h) puis nuit au bord du lac à Oka. Dernière soirée en camping-car."},
- {emoji:"🎓",title:"Montréal — McGill & au revoir",start:"2026-08-24",end:"2026-08-29",lat:45.5019,lng:-73.5555,dates:"24 → 29 août · 5 nuits",plan:"Penthouse de l'Hôtel Epik dans le Vieux-Montréal. On installe Hanaé à McGill. Nos derniers jours tous les six. 💛"}
+ {emoji:"🏙️",title:"Montréal — l'arrivée",start:"2026-08-10",end:"2026-08-12",lat:45.4976,lng:-73.5806,dates:"10 → 12 août · 2 nuits",transp:"avion",
+  plan:"Atterrissage le 10 au soir. Deux jours pour se poser, retrouver la famille et récupérer la voiture.",
+  q:"Le Cantlie Hotel Suites Montréal", addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",
+  tel:"+1 514-842-2000", conf:"2 studios · réf. 1087274036 & 1087277850",
+  when:"Vol aller : French Bee BF760, Paris-Orly → Montréal, arrivée 21h00 (les 6 ensemble).",
+  days:["<b>10 août (soir)</b> : arrivée 21h, installation au Cantlie.","<b>11 août</b> : récupération de la voiture (Enterprise, 15h, 6100 Bd Décarie) · dépôt des grosses valises + déjeuner chez Laval Hung (La Prairie) · 19h dîner chez Muyedine &amp; Majida Farès."],
+  around:"Autour du Cantlie (centre-ville) : le Mont-Royal et son belvédère, le Musée des beaux-arts (à 300 m), la rue Sainte-Catherine, le campus de McGill à pied, le Vieux-Montréal en 15 min."},
+
+ {emoji:"🛩️",title:"La Tuque — l'hydravion",start:"2026-08-12",end:"2026-08-12",lat:47.4370,lng:-72.7820,dates:"12 août · l'envol",transp:"hydravion",
+  plan:"Route depuis Montréal le matin, puis on décolle en hydravion vers le Triton. Le grand frisson du voyage.",
+  q:"Aviation La Tuque, La Tuque, QC", addr:"Aviation La Tuque — 30 Chemin du Contour du Lac-à-Beauce, La Tuque",
+  tel:"+1 819-523-9616", conf:"Hydravion 1 219 $ payable sur place",
+  when:"Décollage à 15h30 — se présenter 30 min avant. Route Montréal → La Tuque : ~3h15, partir tôt.",
+  around:"Bagages légers : 1 sac souple par personne pour l'hydravion. La voiture est acheminée au stationnement du Triton."},
+
+ {emoji:"🛶",title:"Seigneurie du Triton",start:"2026-08-12",end:"2026-08-14",lat:47.6330,lng:-72.2630,dates:"12 → 14 août · 2 nuits",transp:"hydravion",
+  plan:"Chalet Biron privatif sur le lac Édouard. Canot, kayak, baignade, repas en forêt, feux le soir. La nature pure.",
+  q:"Pourvoirie Seigneurie du Triton Lac-Édouard", addr:"Chalet Biron — 12 rue Edmond, Lac-Édouard",
+  tel:"+1 877-393-0557", conf:"Facture #58-470388-1196 · pension complète",
+  when:"Arrivée par hydravion le 12 après-midi. Départ le 14 par la route (voiture au stationnement).",
+  around:"Sur place : canot, kayak, paddle, rando, baignade, observation de la faune. Repas inclus (shore lunch en forêt, soupers table d'hôte)."},
+
+ {emoji:"🏔️",title:"Mont-Tremblant",start:"2026-08-14",end:"2026-08-17",lat:46.2094,lng:-74.5850,dates:"14 → 17 août · 3 nuits",transp:"voiture",
+  plan:"Condo entier dans le village piétonnier : restos, bars, télécabine, plage et lac, le tout à pied.",
+  q:"95 Chemin de Kandahar, Mont-Tremblant", addr:"Tremblant Prestige — 95 Chemin de Kandahar, unité 10, Mont-Tremblant",
+  tel:"Hôte David (via l'app Airbnb)", conf:"Conf. HMM259H2RW · payé 2 524,71 $",
+  when:"Route Triton → Tremblant le 14 (~4h). Check-in 16h, arrivée autonome par clavier (keypad).",
+  around:"À pied depuis le condo : télécabine panoramique, plage du lac Tremblant, luge, tyroliennes, terrasses et restaurants du village. Épicerie la plus proche à Saint-Faustin (~15 min)."},
+
+ {emoji:"🏙️",title:"Montréal — transition",start:"2026-08-17",end:"2026-08-18",lat:45.4976,lng:-73.5806,dates:"17 → 18 août · 1 nuit",transp:"voiture",
+  plan:"Retour à Montréal, on rend la voiture. Une nuit au Cantlie avant de basculer en camping-car.",
+  q:"Le Cantlie Hotel Suites Montréal", addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",
+  tel:"+1 514-842-2000", conf:"2 studios · réf. 765238",
+  when:"Check-out Tremblant 11h · route ~2h · retour de la voiture Enterprise à 17h (6100 Bd Décarie).",
+  around:"Dernière soirée « ville » avant le camping-car : une bonne table dans le Vieux-Montréal (Restaurant Limousine repéré)."},
+
+ {emoji:"🚐",title:"Départ en camping-car",start:"2026-08-18",end:"2026-08-18",lat:45.4970,lng:-73.4040,dates:"18 août · on prend le van",transp:"camper",
+  plan:"On récupère le camping-car, on charge, et cap sur Québec. Le road trip commence vraiment.",
+  q:"Fraserway RV Rentals Montreal, Saint-Hubert", addr:"Fraserway RV — 8900 Chemin de Chambly, Saint-Hubert",
+  tel:"+1 604-527-1102", conf:"Caution 7 500 $ bloquée sur la carte (non dépensée)",
+  when:"Prise du camping-car entre 8h30 et 15h (taxi depuis le Cantlie). Retour prévu le 24 avant 11h30.",
+  around:"On prend la route 138 / autoroute 40 vers Québec. Faire les premières courses avant de quitter la ville."},
+
+ {emoji:"⚜️",title:"Région de Québec",start:"2026-08-18",end:"2026-08-20",lat:46.8571,lng:-71.2880,dates:"18 → 20 août · 2 nuits",transp:"camper",
+  plan:"Camping de la Joie à Charlesbourg, base idéale pour le Vieux-Québec et la chute Montmorency.",
+  q:"Camping de la Joie, Québec", addr:"Camping de la Joie — 640 rue Georges-Muir, Charlesbourg (Québec)",
+  tel:"", conf:"Road-book Authentik",
+  when:"2 nuits. Chute Montmorency à ~15 min, Vieux-Québec à ~20 min.",
+  around:"À voir : la chute Montmorency (plus haute que Niagara !) et sa passerelle, le Vieux-Québec fortifié, le Château Frontenac, la terrasse Dufferin."},
+
+ {emoji:"🏞️",title:"Fjord du Saguenay",start:"2026-08-20",end:"2026-08-22",lat:48.2620,lng:-70.1990,dates:"20 → 22 août · 2 nuits",transp:"camper",
+  plan:"Parc national du Fjord, secteur Baie-Éternité. Kayak de mer en famille au cœur du fjord. Paysages immenses.",
+  q:"Parc national du Fjord-du-Saguenay, Baie-Éternité, Rivière-Éternité", addr:"Parc du Fjord — 91 rue Notre-Dame, Rivière-Éternité",
+  tel:"", conf:"Kayak de mer inclus · accès parc SÉPAQ sur place",
+  when:"2 nuits. Prévoir une polaire : les soirées sont fraîches au bord du fjord.",
+  around:"À faire : kayak de mer, sentier de la statue Notre-Dame-du-Saguenay (vue plongeante), croisière sur le fjord."},
+
+ {emoji:"🐋",title:"Tadoussac — les baleines",start:"2026-08-22",end:"2026-08-23",lat:48.1417,lng:-69.7208,dates:"22 → 23 août · 1 nuit",transp:"camper",
+  plan:"Le grand moment : safari aux baleines en Zodiac. Nuit face au fleuve au Camping Bon-Désir.",
+  q:"Marina de Tadoussac", addr:"Départ safari : Marina de Tadoussac · Nuit : Camping Bon-Désir, 198 route 138, Grandes-Bergeronnes",
+  tel:"+1 418-579-8763", conf:"Safari Zodiac à 15h15 — se présenter 30 min avant",
+  when:"Traverser en traversier (gratuit) à Tadoussac. Baleines à 15h15. Camping Bon-Désir : barrière électrique, arriver avant la fermeture de l'accueil.",
+  around:"Bélugas, petits rorquals, parfois rorquals communs. Habillez chaud et coupe-vent, même par beau temps."},
+
+ {emoji:"🌲",title:"Parc national d'Oka",start:"2026-08-23",end:"2026-08-24",lat:45.4664,lng:-74.0553,dates:"23 → 24 août · 1 nuit",transp:"camper",
+  plan:"Grande route de retour, puis dernière nuit en camping-car au bord du lac à Oka.",
+  q:"Parc national d'Oka", addr:"Camping du Parc national d'Oka — 2020 chemin d'Oka, Oka",
+  tel:"", conf:"À ~49 km de Saint-Hubert pour le retour du van le lendemain",
+  when:"Journée de route : ~539 km / 6h depuis Tadoussac. Partir tôt, se relayer au volant, pause déjeuner à Québec.",
+  around:"Plage du lac des Deux Montagnes, sentiers, calvaire d'Oka. Soirée tranquille avant de rendre le camping-car."},
+
+ {emoji:"🎓",title:"Montréal — McGill & au revoir",start:"2026-08-24",end:"2026-08-29",lat:45.5019,lng:-73.5555,dates:"24 → 29 août · 5 nuits",transp:"pied",
+  plan:"Penthouse de l'Hôtel Epik dans le Vieux-Montréal. On installe Hanaé à McGill. Nos derniers jours tous les six. 💛",
+  q:"Hôtel Epik, 171 Rue Saint-Paul Ouest, Montréal", addr:"Hôtel Epik (Penthouse) — 171 rue Saint-Paul Ouest, Vieux-Montréal",
+  tel:"+1 514-842-2634", conf:"Conf. 382059590 · check-in 15h",
+  when:"24 août : retour du camping-car à Saint-Hubert (avant 11h30) · récup des valises chez Laval · check-in Epik 15h.",
+  days:["<b>Départs du 29 août</b> — Adalbert, Stella, Seyna & Elie → Marrakech (Air Transat TS396, 18h20) · Kim-Louis → Paris (French Bee BF761, 23h) · Hanaé reste à Montréal. Check-out 11h (bagages en consigne)."],
+  around:"Vieux-Montréal à pied : le Vieux-Port, la basilique Notre-Dame, les terrasses. Le campus de McGill pour préparer la rentrée de Hanaé."}
 ];
+
 const COL={done:"#1f7a4d",today:"#c9741d",soon:"#2f6db0"};
 const LBL={done:"Fait ✓",today:"En ce moment",soon:"À venir"};
 const today=new Date().toISOString().slice(0,10);
 const tomorrow=new Date(Date.now()+864e5).toISOString().slice(0,10);
 const statusOf=(s,d)=>d>s.end?"done":(d<s.start?"soon":"today");
 const stageOn=d=>{const m=STAGES.filter(s=>d>=s.start&&d<=s.end);return m.length?(m.find(s=>s.start===d)||m[m.length-1]):null;};
-const mapsUrl=s=>'https://www.google.com/maps/search/?api=1&query='+s.lat+','+s.lng;
-const dirUrl=s=>'https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng;
+const enc=encodeURIComponent;
+const mapsUrl=s=>'https://www.google.com/maps/search/?api=1&query='+enc(s.q);
+const dirUrl=s=>'https://www.google.com/maps/dir/?api=1&destination='+enc(s.q);
 const earthUrl=s=>'https://earth.google.com/web/@'+s.lat+','+s.lng+',1500a,9000d,35y,0h,45t,0r';
 
-/* 1) LE PROGRAMME — écrit en clair, indépendant de la carte */
 const cont=document.getElementById('stages');
 cont.innerHTML=STAGES.map((s,i)=>{
-  const st=statusOf(s,today);
+  const st=statusOf(s,today), tr=TR[s.transp];
+  let rb='<div class="field"><span class="ic">📍</span><span>'+s.addr+'</span></div>';
+  if(s.when) rb+='<div class="field"><span class="ic">🕒</span><span>'+s.when+'</span></div>';
+  if(s.conf) rb+='<div class="field"><span class="ic">✅</span><span>'+s.conf+'</span></div>';
+  if(s.tel) rb+='<div class="field"><span class="ic">📞</span><span>'+s.tel+'</span></div>';
+  if(s.days) rb+='<ul>'+s.days.map(d=>'<li>'+d+'</li>').join('')+'</ul>';
+  if(s.around) rb+='<div class="around"><div class="h">À faire autour</div>'+s.around+'</div>';
   return '<div class="stage '+st+'" data-i="'+i+'">'+
     '<div class="row1"><span class="emoji">'+s.emoji+'</span><span class="ttl">'+s.title+'</span>'+
     '<span class="badge '+st+'">'+LBL[st]+'</span></div>'+
-    '<div class="dates">'+s.dates+'</div><div class="plan">'+s.plan+'</div>'+
+    '<div class="meta"><span class="dates">'+s.dates+'</span><span class="transp" style="background:'+tr.c+'">'+tr.l+'</span></div>'+
+    '<div class="plan">'+s.plan+'</div>'+
     '<div class="links"><a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a>'+
     '<a class="i" target="_blank" href="'+dirUrl(s)+'">🧭 Itinéraire</a>'+
-    '<a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 Vue 3D</a></div></div>';
+    '<a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 Vue 3D</a></div>'+
+    '<details class="rb"><summary>Voir le détail</summary>'+rb+'</details>';
 }).join('');
 
-/* 2) AUJOURD'HUI / DEMAIN */
 const now=document.getElementById('now');
 const started=today>=STAGES[0].start, finished=today>STAGES[STAGES.length-1].end;
 if(!started){
@@ -135,7 +239,6 @@ if(!started){
   if(d)now.innerHTML+='<div class="nowcard tom"><div class="k">👉 Demain</div><div class="t">'+d.emoji+' '+d.title+'</div><div class="d">'+d.plan+'</div></div>';
 }
 
-/* 3) LA CARTE — bonus par-dessus. Si Leaflet ne charge pas, le programme reste visible. */
 function initMap(){
   if(typeof L==='undefined'){document.getElementById('map').style.display='none';return;}
   const map=L.map('map',{scrollWheelZoom:false}).setView([46.8,-72.5],6);
@@ -154,7 +257,7 @@ function initMap(){
   });
   map.fitBounds(L.latLngBounds(STAGES.map(s=>[s.lat,s.lng])).pad(0.15));
   document.querySelectorAll('.stage').forEach(el=>{
-    el.onclick=e=>{ if(e.target.closest('a'))return; const i=+el.dataset.i; map.flyTo([STAGES[i].lat,STAGES[i].lng],9,{duration:.8}); markers[i].openPopup(); document.getElementById('map').scrollIntoView({behavior:'smooth',block:'start'}); };
+    el.addEventListener('click',e=>{ if(e.target.closest('a,summary,details'))return; const i=+el.dataset.i; map.flyTo([STAGES[i].lat,STAGES[i].lng],9,{duration:.8}); markers[i].openPopup(); document.getElementById('map').scrollIntoView({behavior:'smooth',block:'start'}); });
   });
 }
 if(document.readyState!=='loading')initMap();else document.addEventListener('DOMContentLoaded',initMap);
