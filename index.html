@@ -73,6 +73,17 @@
   .rb .around .h{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--done);margin-bottom:3px}
   .rb ul{margin:6px 0 0 4px;padding-left:16px}
   .rb li{font-size:13px;line-height:1.5;margin-bottom:2px}
+  .grp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 16px 12px}
+  .grp h3{font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+  .grp.rez h3{color:var(--done)} .grp.faire h3{color:var(--today)}
+  .grp .sub{font-size:12px;color:var(--soft);margin-bottom:4px}
+  .rez .li{display:flex;gap:9px;font-size:13.5px;line-height:1.45;padding:7px 0;border-top:1px solid var(--line)}
+  .rez .li:first-of-type{border-top:none}
+  .rez .li .ic{color:var(--done);flex:0 0 16px;font-weight:700}
+  .faire label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:13.5px;line-height:1.45;padding:8px 0;border-top:1px solid var(--line)}
+  .faire label:first-of-type{border-top:none}
+  .faire input{margin-top:2px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--done)}
+  .faire label.on span{color:var(--soft);text-decoration:line-through}
   footer{text-align:center;color:var(--soft);font-size:12px;padding:0 16px 40px;line-height:1.6}
 </style>
 </head>
@@ -104,6 +115,10 @@
 
   <h2 class="sec">🗺️ Le programme · le road book</h2>
   <div class="stages" id="stages"></div>
+
+  <h2 class="sec">✅ Réservations &amp; à faire</h2>
+  <div class="grp rez"><h3>Tout est réservé &amp; réglé</h3><div id="rez"></div></div>
+  <div class="grp faire"><h3>À faire avant le départ</h3><div class="sub">Coche au fur et à mesure — c'est mémorisé sur ton téléphone.</div><div id="faire"></div></div>
 
   <footer>Touche « Voir le détail » pour tout savoir sur chaque étape.<br>La carte et les statuts se mettent à jour tout seuls chaque jour. 💛</footer>
 </div>
@@ -238,6 +253,27 @@ if(!started){
   if(t)now.innerHTML+='<div class="nowcard"><div class="k">📍 Aujourd\'hui</div><div class="t">'+t.emoji+' '+t.title+'</div><div class="d">'+t.plan+'</div></div>';
   if(d)now.innerHTML+='<div class="nowcard tom"><div class="k">👉 Demain</div><div class="t">'+d.emoji+' '+d.title+'</div><div class="d">'+d.plan+'</div></div>';
 }
+
+const REZ=[
+ "✈️ Vols aller (10 août) &amp; retours (29 août) — payés",
+ "🏨 Le Cantlie (10-12 &amp; 17-18), Chalet Biron au Triton (12-14), Mont-Tremblant (14-17), Hôtel Epik (24-29) — réservés",
+ "🚗 Voiture Enterprise, Pacifica (11 → 17 août) — confirmée (réf. 2097899856), réglée au comptoir (~829 $ + dépôt 300 $)",
+ "🚐 Camping-car Authentik / Marion (18 → 24 août) — facture finale payée (dossier 0818-frotier-de-bagneux-MV). Rien de plus à payer à Marion."
+];
+const FAIRE=[
+ "AVE ou visa d'entrée au Canada pour chacun des 6 (selon le passeport)",
+ "Permis de conduire international + carte de crédit au nom d'Adalbert (exigés pour Enterprise ET le camping-car)",
+ "Hanaé : CAQ + permis d'études (McGill)",
+ "Télécharger &amp; imprimer le Roadbook + les vouchers Authentik (Espace Client)",
+ "Réserver les accès parcs SÉPAQ (Fjord, Oka) — inclus si on dort dans le parc",
+ "🎁 Rapporter de France un tube de Bion 3 Vitalité 50+ pour Daniele",
+ "Une polaire / un coupe-vent par personne (fjord &amp; baleines)",
+ "Banque : plafonds relevés + caution camping-car 7 500 $ CAD (RDV CIC)"
+];
+document.getElementById('rez').innerHTML=REZ.map(r=>'<div class="li"><span class="ic">✓</span><span>'+r+'</span></div>').join('');
+const fc=document.getElementById('faire');
+fc.innerHTML=FAIRE.map((f,i)=>'<label data-k="todo_'+i+'"><input type="checkbox"><span>'+f+'</span></label>').join('');
+fc.querySelectorAll('label').forEach(l=>{const k=l.dataset.k,cb=l.querySelector('input');cb.checked=localStorage.getItem(k)==='1';l.classList.toggle('on',cb.checked);cb.addEventListener('change',()=>{localStorage.setItem(k,cb.checked?'1':'0');l.classList.toggle('on',cb.checked);});});
 
 function initMap(){
   if(typeof L==='undefined'){document.getElementById('map').style.display='none';return;}
