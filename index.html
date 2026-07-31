@@ -9,205 +9,247 @@
 <title>Notre voyage · Québec 2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   :root{--bg:#f6f5f1;--card:#fff;--ink:#1d1b17;--soft:#6d665c;--line:#e6e2da;--done:#1f7a4d;--today:#c9741d;--soon:#2f6db0;
     --voiture:#2f6db0;--camper:#0e8a8a;--avion:#7a4bb0;--pied:#6d665c}
   html,body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding-bottom:74px}
   .wrap{max-width:720px;margin:0 auto}
-  header{padding:calc(env(safe-area-inset-top) + 14px) 16px 8px;text-align:center}
-  header h1{font-size:23px;letter-spacing:-.02em}
-  header .sub{font-size:12px;color:var(--soft);text-transform:uppercase;letter-spacing:.12em;margin-top:3px}
 
-  .glance{margin:12px 16px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:13px;line-height:1.55;color:var(--soft)}
-  .glance b{color:var(--ink)}
-  .glance .t{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink);margin-bottom:5px}
+  header{position:sticky;top:0;z-index:20;background:rgba(246,245,241,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top) + 12px) 16px 11px;text-align:center}
+  header h1{font-size:17px;letter-spacing:-.01em}
+  header .sub{font-size:11px;color:var(--soft);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
 
-  .now{margin:12px 16px 0}
-  .bigcount{background:var(--ink);color:#fff;border-radius:16px;padding:16px;text-align:center;margin-bottom:10px}
-  .bigcount .n{font-size:32px;font-weight:800;line-height:1}
-  .bigcount .l{font-size:12px;opacity:.85;margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
-  .nowcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+  .view{display:none;padding:14px 16px 20px}
+  .view.on{display:block}
+  h2.sec{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:20px 2px 10px}
+  h2.sec:first-child{margin-top:4px}
+
+  /* accueil */
+  .bigcount{background:var(--ink);color:#fff;border-radius:16px;padding:18px;text-align:center;margin-bottom:12px}
+  .bigcount .n{font-size:34px;font-weight:800;line-height:1}
+  .bigcount .l{font-size:12px;opacity:.85;margin-top:5px;text-transform:uppercase;letter-spacing:.08em}
+  .nowcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:11px}
   .nowcard .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--today)}
   .nowcard.tom .k{color:var(--soon)}
   .nowcard .t{font-size:18px;font-weight:700;margin-top:3px}
   .nowcard .d{font-size:13.5px;color:var(--soft);margin-top:4px;line-height:1.45}
+  .glance{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;font-size:13px;line-height:1.6;color:var(--soft)}
+  .glance b{color:var(--ink)}
+  .shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .sc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;cursor:pointer;font-size:13.5px;font-weight:600}
+  .sc .e{font-size:22px;display:block;margin-bottom:5px}
 
-  #map{height:48vh;min-height:300px;margin:12px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#e9eef0;z-index:1}
-  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:10px 16px;font-size:12px;color:var(--soft)}
-  .legend span{display:inline-flex;align-items:center;gap:5px}
-  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
-  .marker{width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff}
-  .marker span{transform:rotate(45deg);font-size:16px}
-  .leaflet-popup-content{margin:12px 14px;font-family:inherit}
-  .pop .pt{font-size:15px;font-weight:700}.pop .pd{font-size:12px;color:var(--soft);margin:2px 0 8px}
-  .pop .px{font-size:13px;line-height:1.4;margin-bottom:10px}
-  .pop .btns{display:flex;gap:6px;flex-wrap:wrap}
-  .pop a{flex:1;text-align:center;text-decoration:none;font-size:12px;font-weight:700;padding:8px 6px;border-radius:9px;white-space:nowrap}
-  .pop a.m{background:#eaf1f8;color:#2f6db0}.pop a.i{background:#fbf1e6;color:#c9741d}.pop a.e{background:#eef7f0;color:#1f7a4d}
-
-  h2.sec{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:22px 16px 12px}
-  .stages{padding:0 16px 40px}
-  .stage{background:var(--card);border:1px solid var(--line);border-left-width:5px;border-radius:14px;padding:13px 15px;margin-bottom:11px}
-  .stage.done{border-left-color:var(--done)}.stage.today{border-left-color:var(--today);box-shadow:0 3px 14px rgba(201,116,29,.18)}.stage.soon{border-left-color:var(--soon)}
-  .stage .row1{display:flex;align-items:center;gap:9px}
-  .stage .emoji{font-size:22px}.stage .ttl{font-size:16px;font-weight:700}
-  .stage .badge{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:20px}
+  /* timeline programme */
+  .tl .item{display:flex;gap:13px}
+  .tl .rail{display:flex;flex-direction:column;align-items:center}
+  .tl .dot{width:14px;height:14px;border-radius:50%;margin-top:6px;flex:0 0 auto;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+  .tl .line{width:2px;flex:1;background:var(--line);margin:4px 0}
+  .tl .body{flex:1;padding-bottom:16px}
+  .tl details{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .tl summary{list-style:none;cursor:pointer;padding:12px 14px}
+  .tl summary::-webkit-details-marker{display:none}
+  .tl .date{font-size:12px;color:var(--soft)}
+  .tl .row1{display:flex;align-items:center;gap:8px;margin-top:2px}
+  .tl .emoji{font-size:19px}.tl .ttl{font-size:15.5px;font-weight:700}
+  .tl .badge{margin-left:auto;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;padding:2px 8px;border-radius:20px}
   .badge.done{background:#eef7f0;color:var(--done)}.badge.today{background:#fbf1e6;color:var(--today)}.badge.soon{background:#eaf1f8;color:var(--soon)}
-  .meta{margin:7px 0 0 31px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .meta .dates{font-size:12.5px;color:var(--soft)}
-  .transp{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff}
-  .stage .plan{font-size:14px;line-height:1.5;margin:7px 0 0 31px}
-  .stage .links{margin:9px 0 0 31px;display:flex;gap:6px;flex-wrap:wrap}
-  .stage .links a{font-size:11.5px;font-weight:700;text-decoration:none;padding:6px 10px;border-radius:9px}
-  .stage .links a.m{background:#eaf1f8;color:#2f6db0}.stage .links a.i{background:#fbf1e6;color:#c9741d}.stage .links a.e{background:#eef7f0;color:#1f7a4d}
-  details.rb{margin:10px 0 0 31px;border-top:1px dashed var(--line);padding-top:9px}
-  details.rb summary{font-size:12.5px;font-weight:700;color:var(--soon);cursor:pointer;list-style:none}
-  details.rb summary::-webkit-details-marker{display:none}
-  details.rb summary::before{content:"▸ ";}
-  details.rb[open] summary::before{content:"▾ ";}
-  .rb .field{font-size:13px;line-height:1.5;margin:8px 0 0;display:flex;gap:7px}
+  .tl .plan{font-size:13.5px;color:var(--soft);margin-top:6px;line-height:1.45}
+  .tl .transp{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff;margin-top:8px}
+  .rb{padding:0 14px 13px}
+  .rb .field{font-size:13px;line-height:1.5;margin:9px 0 0;display:flex;gap:7px}
   .rb .field .ic{flex:0 0 18px;text-align:center}
-  .rb .field b{font-weight:600}
   .rb .field a{color:var(--soon);text-decoration:none}
-  .rb .around{margin:9px 0 0;background:#f3f6f4;border-radius:10px;padding:9px 11px;font-size:13px;line-height:1.5}
-  .rb .around .h{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--done);margin-bottom:3px}
-  .rb ul{margin:6px 0 0 4px;padding-left:16px}
-  .rb li{font-size:13px;line-height:1.5;margin-bottom:2px}
-  .grp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 16px 12px}
-  .grp h3{font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-  .grp.rez h3{color:var(--done)} .grp.faire h3{color:var(--today)}
-  .grp .sub{font-size:12px;color:var(--soft);margin-bottom:4px}
+  .rb ul{margin:9px 0 0;padding-left:18px}.rb li{font-size:13px;line-height:1.5;margin-bottom:3px}
+  .rb .around{margin:10px 0 0;background:#f3f6f4;border-radius:10px;padding:9px 11px;font-size:13px;line-height:1.5}
+  .rb .around .h{font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--done);margin-bottom:3px}
+  .maplink{display:flex;gap:6px;margin:11px 0 0}
+  .maplink a{flex:1;text-align:center;text-decoration:none;font-size:11.5px;font-weight:700;padding:7px 6px;border-radius:9px}
+  .maplink a.m{background:#eaf1f8;color:#2f6db0}.maplink a.i{background:#fbf1e6;color:#c9741d}.maplink a.e{background:#eef7f0;color:#1f7a4d}
+
+  /* carte */
+  #map{height:calc(100vh - 210px);min-height:360px;border-radius:14px;border:1px solid var(--line);z-index:1}
+  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:10px 4px 0;font-size:12px;color:var(--soft)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .ldot{width:11px;height:11px;border-radius:50%}
+  .marker{width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff}
+  .marker span{transform:rotate(45deg);font-size:15px}
+  .leaflet-popup-content{margin:11px 13px;font-family:inherit}
+  .pop .pt{font-size:14px;font-weight:700}.pop .pd{font-size:12px;color:var(--soft);margin:2px 0 7px}
+
+  /* réservations & docs cards */
+  .acc{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:11px}
+  .acc summary{list-style:none;cursor:pointer;padding:14px 15px;display:flex;align-items:center;gap:11px}
+  .acc summary::-webkit-details-marker{display:none}
+  .acc .e{font-size:21px}.acc .h{font-size:15px;font-weight:700}.acc .s{font-size:12px;color:var(--soft);margin-top:1px}
+  .acc .chev{margin-left:auto;color:var(--soft);transition:transform .2s}
+  .acc[open] .chev{transform:rotate(90deg)}
+  .acc .in{padding:0 15px 14px;font-size:13.5px;line-height:1.55}
+  .acc .in .field{display:flex;gap:7px;margin-top:8px}.acc .in .field .ic{flex:0 0 18px;text-align:center}
+  .acc .in a{color:var(--soon);text-decoration:none}
+  .subcard{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+  .subcard:first-child{border-top:none;padding-top:0;margin-top:0}
+  .subcard .nm{font-weight:700;font-size:14px}.subcard .dt{font-size:12px;color:var(--soft)}
+
+  .info{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:11px;font-size:13.5px;line-height:1.6}
+  .info h3{font-size:14.5px;margin-bottom:5px}
+  .info .warn{color:var(--today);font-weight:600}
   .rez .li{display:flex;gap:9px;font-size:13.5px;line-height:1.45;padding:7px 0;border-top:1px solid var(--line)}
-  .rez .li:first-of-type{border-top:none}
-  .rez .li .ic{color:var(--done);flex:0 0 16px;font-weight:700}
-  .faire label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:13.5px;line-height:1.45;padding:8px 0;border-top:1px solid var(--line)}
+  .rez .li:first-of-type{border-top:none}.rez .li .ic{color:var(--done);flex:0 0 16px;font-weight:700}
+  .faire label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:13.5px;line-height:1.45;padding:9px 0;border-top:1px solid var(--line)}
   .faire label:first-of-type{border-top:none}
-  .faire input{margin-top:2px;width:18px;height:18px;flex:0 0 18px;accent-color:var(--done)}
+  .faire input{margin-top:2px;width:19px;height:19px;flex:0 0 19px;accent-color:var(--done)}
   .faire label.on span{color:var(--soft);text-decoration:line-through}
-  footer{text-align:center;color:var(--soft);font-size:12px;padding:0 16px 40px;line-height:1.6}
+  .pk h4{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--soft);margin:12px 0 4px}
+  .pk ul{padding-left:18px}.pk li{font-size:13.5px;line-height:1.5;margin-bottom:3px}
+  .ct a{display:flex;justify-content:space-between;text-decoration:none;color:var(--ink);font-size:13.5px;padding:9px 0;border-top:1px solid var(--line)}
+  .ct a:first-child{border-top:none}.ct a b{color:var(--soon);font-weight:600}
+
+  /* nav bas */
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  nav button{flex:1;background:none;border:none;padding:8px 0 7px;color:var(--soft);cursor:pointer;font-family:inherit}
+  nav button .e{font-size:21px;display:block;line-height:1}
+  nav button .t{font-size:10px;margin-top:3px;display:block}
+  nav button.on{color:var(--today)}
+  nav button.on .t{font-weight:700}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Notre voyage 🍁</h1>
-    <div class="sub">Québec · 10 → 29 août 2026</div>
-  </header>
+  <header><h1>Notre voyage 🍁</h1><div class="sub">Québec · 10 → 29 août 2026</div></header>
 
-  <div class="glance">
-    <div class="t">🧭 Le voyage en un coup d'œil</div>
-    ✈️ Vol jusqu'à Montréal, puis deux grands temps :<br>
-    🚗 <b>En voiture (11 → 17 août)</b> : Montréal, l'hydravion vers le Triton, Mont-Tremblant.<br>
-    🚐 <b>En camping-car (18 → 24 août)</b> : Québec, le fjord du Saguenay, les baleines de Tadoussac.<br>
-    🎓 Retour à Montréal (24 → 29) pour installer Hanaé à McGill.
-  </div>
+  <section class="view on" id="v-accueil">
+    <div id="now"></div>
+    <h2 class="sec">🧭 Le voyage en un coup d'œil</h2>
+    <div class="glance">
+      ✈️ Vol jusqu'à Montréal, puis :<br>
+      🚗 <b>En voiture (11 → 17 août)</b> — Montréal, l'hydravion vers le Triton, Mont-Tremblant.<br>
+      🚐 <b>En camping-car (18 → 24 août)</b> — Québec, le fjord, les baleines de Tadoussac.<br>
+      🎓 Retour à Montréal (24 → 29) pour McGill.
+    </div>
+    <div class="shortcuts">
+      <div class="sc" onclick="go('programme')"><span class="e">🗓️</span>Le programme</div>
+      <div class="sc" onclick="go('carte')"><span class="e">🗺️</span>La carte</div>
+      <div class="sc" onclick="go('reservations')"><span class="e">🎫</span>Réservations</div>
+      <div class="sc" onclick="go('docs')"><span class="e">📋</span>Docs &amp; à faire</div>
+    </div>
+  </section>
 
-  <div class="now" id="now">
-    <div class="bigcount"><div class="n" id="cnt">J-11</div><div class="l">avant le grand départ ✈️</div></div>
-  </div>
+  <section class="view" id="v-programme">
+    <h2 class="sec">🗓️ Chronologie du voyage — jour par jour</h2>
+    <div class="tl" id="tl"></div>
+  </section>
 
-  <div id="map"></div>
-  <div class="legend">
-    <span><i class="dot" style="background:var(--done)"></i> déjà fait</span>
-    <span><i class="dot" style="background:var(--today)"></i> en ce moment</span>
-    <span><i class="dot" style="background:var(--soon)"></i> à venir</span>
-  </div>
+  <section class="view" id="v-carte">
+    <div id="map"></div>
+    <div class="legend">
+      <span><i class="ldot" style="background:var(--done)"></i> déjà fait</span>
+      <span><i class="ldot" style="background:var(--today)"></i> en ce moment</span>
+      <span><i class="ldot" style="background:var(--soon)"></i> à venir</span>
+    </div>
+  </section>
 
-  <h2 class="sec">🗺️ Le programme · le road book</h2>
-  <div class="stages" id="stages"></div>
+  <section class="view" id="v-reservations">
+    <h2 class="sec">🎫 Tout est réservé &amp; réglé</h2>
+    <div id="rez"></div>
+  </section>
 
-  <h2 class="sec">✅ Réservations &amp; à faire</h2>
-  <div class="grp rez"><h3>Tout est réservé &amp; réglé</h3><div id="rez"></div></div>
-  <div class="grp faire"><h3>À faire avant le départ</h3><div class="sub">Coche au fur et à mesure — c'est mémorisé sur ton téléphone.</div><div id="faire"></div></div>
+  <section class="view" id="v-docs">
+    <h2 class="sec">🛂 Entrée au Canada</h2>
+    <div class="info">
+      <h3>AVE — pour les 5 (tourisme)</h3>
+      Sur passeport français : une <b>AVE</b> chacun (Adalbert, Stella, Kim-Louis, Seyna, Elie). En ligne sur <a href="https://www.canada.ca/fr/immigration-refugies-citoyennete/services/visiter-canada/ave/demande.html" target="_blank">canada.ca</a>, <b>7 $ CAD</b>, quelques minutes, valable 5 ans.
+    </div>
+    <div class="info">
+      <h3>Hanaé — CAQ + permis d'études</h3>
+      Étudier plus de 6 mois au Québec = deux papiers : le <b>CAQ</b> (Québec/MIFI, ~135 $, en ligne, 4-6 semaines) puis le <b>permis d'études</b> (Canada/IRCC). Le permis couvre son entrée — pas besoin d'AVE séparée. <span class="warn">À lancer sans tarder.</span>
+    </div>
+    <div class="info">
+      <h3>📄 Vouchers &amp; roadbook</h3>
+      Camping-car Authentik payé (facture P162665, 1 591,26 €, solde 0). Roadbook + vouchers imprimables dans l'<a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client Authentik</a>.
+    </div>
 
-  <footer>Touche « Voir le détail » pour tout savoir sur chaque étape.<br>La carte et les statuts se mettent à jour tout seuls chaque jour. 💛</footer>
+    <h2 class="sec">✅ À faire avant le départ</h2>
+    <div class="info faire"><div class="sub" style="font-size:12px;color:var(--soft);margin-bottom:2px">Coche au fur et à mesure — mémorisé sur ton téléphone.</div><div id="faire"></div></div>
+
+    <h2 class="sec">🧳 À ne pas oublier</h2>
+    <div class="info pk" id="pk"></div>
+
+    <h2 class="sec">☎️ Contacts utiles</h2>
+    <div class="info ct" id="ct"></div>
+  </section>
 </div>
+
+<nav id="nav">
+  <button data-v="accueil" class="on"><span class="e">🏠</span><span class="t">Accueil</span></button>
+  <button data-v="programme"><span class="e">🗓️</span><span class="t">Programme</span></button>
+  <button data-v="carte"><span class="e">🗺️</span><span class="t">Carte</span></button>
+  <button data-v="reservations"><span class="e">🎫</span><span class="t">Réserv.</span></button>
+  <button data-v="docs"><span class="e">📋</span><span class="t">Docs</span></button>
+</nav>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const TR={avion:{c:"#7a4bb0",l:"✈️ Vol"},voiture:{c:"#2f6db0",l:"🚗 Voiture"},hydravion:{c:"#c9741d",l:"🛩️ Hydravion"},camper:{c:"#0e8a8a",l:"🚐 Camping-car"},pied:{c:"#6d665c",l:"🚶 À pied / taxi"}};
-
 const STAGES=[
  {emoji:"🏙️",title:"Montréal — l'arrivée",start:"2026-08-10",end:"2026-08-12",lat:45.4976,lng:-73.5806,dates:"10 → 12 août · 2 nuits",transp:"avion",
   plan:"Atterrissage le 10 au soir. Deux jours pour se poser, retrouver la famille et récupérer la voiture.",
-  q:"Le Cantlie Hotel Suites Montréal", addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",
-  tel:"+1 514-842-2000", conf:"2 studios · réf. 1087274036 & 1087277850",
-  when:"Vol aller : French Bee BF760, Paris-Orly (Terminal 4) → Montréal, 19h20 → 21h00 (les 6 ensemble). Bagages par personne : 2 valises en soute (23 kg max chacune) + 1 bagage cabine (12 kg, 115 cm). Se présenter au comptoir dépose-bagages 4h avant.",
-  days:["<b>10 août (soir)</b> : arrivée 21h, installation au Cantlie.","<b>11 août</b> : récupération de la voiture (Enterprise, 15h, 6100 Bd Décarie) · dépôt des grosses valises + déjeuner chez Laval Hung (La Prairie) · 19h dîner chez Muyedine &amp; Majida Farès."],
-  around:"Autour du Cantlie (centre-ville) : le Mont-Royal et son belvédère, le Musée des beaux-arts (à 300 m), la rue Sainte-Catherine, le campus de McGill à pied, le Vieux-Montréal en 15 min."},
-
+  q:"Le Cantlie Hotel Suites Montréal",addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",tel:"+1 514-842-2000",conf:"2 studios · réf. 1087274036 & 1087277850",
+  when:"Vol aller : French Bee BF760, Paris-Orly (T4) → Montréal, 19h20 → 21h00 (les 6). Bagages/pers. : 2 valises soute 23 kg + 1 cabine 12 kg. Dépose-bagages 4h avant.",
+  days:["<b>10 août (soir)</b> : arrivée 21h, installation au Cantlie.","<b>11 août</b> : récup voiture (Enterprise, 15h, 6100 Bd Décarie) · dépôt grosses valises + déjeuner chez Laval Hung (La Prairie) · 19h dîner chez Muyedine &amp; Majida Farès."],
+  around:"Autour du Cantlie : Mont-Royal, Musée des beaux-arts (300 m), rue Sainte-Catherine, campus McGill à pied, Vieux-Montréal en 15 min."},
  {emoji:"🛩️",title:"La Tuque — l'hydravion",start:"2026-08-12",end:"2026-08-12",lat:47.4370,lng:-72.7820,dates:"12 août · l'envol",transp:"hydravion",
-  plan:"Route depuis Montréal le matin, puis on décolle en hydravion vers le Triton. Le grand frisson du voyage.",
-  q:"Aviation La Tuque, La Tuque, QC", addr:"Aviation La Tuque — 30 Chemin du Contour du Lac-à-Beauce, La Tuque",
-  tel:"+1 819-523-9616", conf:"Hydravion 1 219 $ payable sur place",
-  when:"Décollage à 15h30 — se présenter 30 min avant. Route Montréal → La Tuque : ~3h15, partir tôt.",
-  around:"Bagages légers : 1 sac souple par personne pour l'hydravion. La voiture est acheminée au stationnement du Triton."},
-
+  plan:"Route depuis Montréal le matin, puis on décolle en hydravion vers le Triton. Le grand frisson.",
+  q:"Aviation La Tuque, La Tuque, QC",addr:"Aviation La Tuque — 30 Chemin du Contour du Lac-à-Beauce, La Tuque",tel:"+1 819-523-9616",conf:"Hydravion 1 219 $ payable sur place",
+  when:"Décollage 15h30 — se présenter 30 min avant. Route Montréal → La Tuque ~3h15, partir tôt.",
+  around:"Bagages légers : 1 sac souple/pers. pour l'hydravion. La voiture est acheminée au stationnement du Triton."},
  {emoji:"🛶",title:"Seigneurie du Triton",start:"2026-08-12",end:"2026-08-14",lat:47.6330,lng:-72.2630,dates:"12 → 14 août · 2 nuits",transp:"hydravion",
-  plan:"Chalet Biron privatif sur le lac Édouard. Canot, kayak, baignade, repas en forêt, feux le soir. La nature pure.",
-  q:"Pourvoirie Seigneurie du Triton Lac-Édouard", addr:"Chalet Biron — 12 rue Edmond, Lac-Édouard",
-  tel:"+1 877-393-0557", conf:"Facture #58-470388-1196 · pension complète",
-  when:"Arrivée par hydravion le 12 après-midi. Départ le 14 par la route (voiture au stationnement).",
-  around:"Sur place : canot, kayak, paddle, rando, baignade, observation de la faune. Repas inclus (shore lunch en forêt, soupers table d'hôte)."},
-
+  plan:"Chalet Biron privatif sur le lac Édouard. Canot, kayak, baignade, repas en forêt, feux le soir.",
+  q:"Pourvoirie Seigneurie du Triton Lac-Édouard",addr:"Chalet Biron — 12 rue Edmond, Lac-Édouard",tel:"+1 877-393-0557",conf:"Facture #58-470388-1196 · pension complète",
+  when:"Arrivée par hydravion le 12 après-midi. Départ le 14 par la route.",
+  around:"Sur place : canot, kayak, paddle, rando, baignade. Repas inclus (shore lunch, soupers table d'hôte)."},
  {emoji:"🏔️",title:"Mont-Tremblant",start:"2026-08-14",end:"2026-08-17",lat:46.2094,lng:-74.5850,dates:"14 → 17 août · 3 nuits",transp:"voiture",
-  plan:"Condo entier dans le village piétonnier : restos, bars, télécabine, plage et lac, le tout à pied.",
-  q:"95 Chemin de Kandahar, Mont-Tremblant", addr:"Tremblant Prestige — 95 Chemin de Kandahar, unité 10, Mont-Tremblant",
-  tel:"Hôte David (via l'app Airbnb)", conf:"Conf. HMM259H2RW · payé 2 524,71 $",
-  when:"Route Triton → Tremblant le 14 (~4h). Check-in 16h, arrivée autonome par clavier (keypad).",
-  around:"À pied depuis le condo : télécabine panoramique, plage du lac Tremblant, luge, tyroliennes, terrasses et restaurants du village. Épicerie la plus proche à Saint-Faustin (~15 min)."},
-
+  plan:"Condo entier dans le village piétonnier : restos, télécabine, plage et lac, à pied. (Seule lessive du voyage ici !)",
+  q:"95 Chemin de Kandahar, Mont-Tremblant",addr:"Tremblant Prestige — 95 Chemin de Kandahar, unité 10, Mont-Tremblant",tel:"Hôte David (app Airbnb)",conf:"Conf. HMM259H2RW · payé 2 524,71 $",
+  when:"Route Triton → Tremblant le 14 (~4h). Check-in 16h, arrivée par clavier (keypad).",
+  around:"À pied : télécabine, plage du lac, luge, tyroliennes, restaurants du village. Épicerie à Saint-Faustin (~15 min)."},
  {emoji:"🏙️",title:"Montréal — transition",start:"2026-08-17",end:"2026-08-18",lat:45.4976,lng:-73.5806,dates:"17 → 18 août · 1 nuit",transp:"voiture",
-  plan:"Retour à Montréal, on rend la voiture. Une nuit au Cantlie avant de basculer en camping-car.",
-  q:"Le Cantlie Hotel Suites Montréal", addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",
-  tel:"+1 514-842-2000", conf:"2 studios (1 King + 2 Queen) · réf. 765237 & 765238",
-  when:"Check-out Tremblant 11h · route ~2h · retour de la voiture Enterprise à 17h (6100 Bd Décarie). À l'arrivée : carte + pièce d'identité au nom de la réservation exigées (le titulaire doit être présent), pré-autorisation 150 $/studio.",
-  around:"Dernière soirée « ville » avant le camping-car : une bonne table dans le Vieux-Montréal (Restaurant Limousine repéré)."},
-
+  plan:"Retour à Montréal, on rend la voiture. Une nuit au Cantlie avant le camping-car.",
+  q:"Le Cantlie Hotel Suites Montréal",addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",tel:"+1 514-842-2000",conf:"2 studios (1 King + 2 Queen) · réf. 765237 & 765238",
+  when:"Check-out Tremblant 11h · route ~2h · retour voiture Enterprise 17h. À l'arrivée : carte + pièce d'identité au nom de la réservation, pré-auth 150 $/studio.",
+  around:"Dernière soirée « ville » : une bonne table dans le Vieux-Montréal (Restaurant Limousine repéré)."},
  {emoji:"🚐",title:"Départ en camping-car",start:"2026-08-18",end:"2026-08-18",lat:45.4970,lng:-73.4040,dates:"18 août · on prend le van",transp:"camper",
-  plan:"On récupère le camping-car, on charge, et cap sur Québec. Le road trip commence vraiment.",
-  q:"Fraserway RV Rentals Montreal, Saint-Hubert", addr:"Fraserway RV — 8900 Chemin de Chambly, Saint-Hubert",
-  tel:"+1 604-527-1102", conf:"Caution 7 500 $ bloquée sur la carte (non dépensée)",
-  when:"Prise du camping-car entre 8h30 et 15h (taxi depuis le Cantlie). Retour prévu le 24 avant 11h30.",
-  around:"On prend la route 138 / autoroute 40 vers Québec. Faire les premières courses avant de quitter la ville."},
-
+  plan:"On récupère le camping-car, on charge, et cap sur Québec.",
+  q:"Fraserway RV Rentals Montreal, Saint-Hubert",addr:"Fraserway RV — 8900 Chemin de Chambly, Saint-Hubert",tel:"+1 604-527-1102",conf:"Caution 7 500 $ bloquée sur la carte",
+  when:"Prise du camping-car 8h30-15h (taxi depuis le Cantlie). Retour prévu le 24 avant 11h30.",
+  around:"Route 138 / autoroute 40 vers Québec. Premières courses avant de quitter la ville."},
  {emoji:"⚜️",title:"Région de Québec",start:"2026-08-18",end:"2026-08-20",lat:46.8571,lng:-71.2880,dates:"18 → 20 août · 2 nuits",transp:"camper",
-  plan:"Camping de la Joie à Charlesbourg, base idéale pour le Vieux-Québec et la chute Montmorency.",
-  q:"Camping de la Joie, Québec", addr:"Camping de la Joie — 640 rue Georges-Muir, Charlesbourg (Québec)",
-  tel:"", conf:"Road-book Authentik",
-  when:"2 nuits. Chute Montmorency à ~15 min, Vieux-Québec à ~20 min.",
-  around:"À voir : la chute Montmorency (plus haute que Niagara !) et sa passerelle, le Vieux-Québec fortifié, le Château Frontenac, la terrasse Dufferin."},
-
+  plan:"Camping de la Joie à Charlesbourg, base pour le Vieux-Québec et la chute Montmorency.",
+  q:"Camping de la Joie, Québec",addr:"Camping de la Joie — 640 rue Georges-Muir, Charlesbourg",tel:"",conf:"Road-book Authentik",
+  when:"2 nuits. Chute Montmorency ~15 min, Vieux-Québec ~20 min.",
+  around:"À voir : chute Montmorency et sa passerelle, Vieux-Québec fortifié, Château Frontenac, terrasse Dufferin."},
  {emoji:"🏞️",title:"Fjord du Saguenay",start:"2026-08-20",end:"2026-08-22",lat:48.2620,lng:-70.1990,dates:"20 → 22 août · 2 nuits",transp:"camper",
-  plan:"Parc national du Fjord, secteur Baie-Éternité. Kayak de mer en famille au cœur du fjord. Paysages immenses.",
-  q:"Parc national du Fjord-du-Saguenay, Baie-Éternité, Rivière-Éternité", addr:"Parc du Fjord — 91 rue Notre-Dame, Rivière-Éternité",
-  tel:"", conf:"Kayak de mer inclus · accès parc SÉPAQ sur place",
-  when:"2 nuits. Prévoir une polaire : les soirées sont fraîches au bord du fjord.",
-  around:"À faire : kayak de mer, sentier de la statue Notre-Dame-du-Saguenay (vue plongeante), croisière sur le fjord."},
-
+  plan:"Parc du Fjord, secteur Baie-Éternité. Kayak de mer en famille au cœur du fjord.",
+  q:"Parc national du Fjord-du-Saguenay, Baie-Éternité, Rivière-Éternité",addr:"Parc du Fjord — 91 rue Notre-Dame, Rivière-Éternité",tel:"",conf:"Kayak de mer inclus (21 août) · accès SÉPAQ sur place",
+  when:"2 nuits. Prévoir une polaire : soirées fraîches au bord du fjord.",
+  around:"Kayak de mer, sentier de la statue Notre-Dame-du-Saguenay (vue plongeante), croisière fjord."},
  {emoji:"🐋",title:"Tadoussac — les baleines",start:"2026-08-22",end:"2026-08-23",lat:48.1417,lng:-69.7208,dates:"22 → 23 août · 1 nuit",transp:"camper",
-  plan:"Le grand moment : safari aux baleines en Zodiac. Nuit face au fleuve au Camping Bon-Désir.",
-  q:"Marina de Tadoussac", addr:"Départ safari : Marina de Tadoussac · Nuit : Camping Bon-Désir, 198 route 138, Grandes-Bergeronnes",
-  tel:"+1 418-579-8763", conf:"Safari Zodiac à 15h15 — se présenter 30 min avant",
-  when:"Traverser en traversier (gratuit) à Tadoussac. Baleines à 15h15. Camping Bon-Désir : barrière électrique, arriver avant la fermeture de l'accueil.",
-  around:"Bélugas, petits rorquals, parfois rorquals communs. Habillez chaud et coupe-vent, même par beau temps."},
-
+  plan:"Safari aux baleines en Zodiac. Nuit face au fleuve au Camping Bon-Désir.",
+  q:"Marina de Tadoussac",addr:"Départ : Marina de Tadoussac · Nuit : Camping Bon-Désir, 198 route 138, Grandes-Bergeronnes",tel:"+1 418-579-8763",conf:"Safari Zodiac 15h15 — se présenter 30 min avant",
+  when:"Traversier (gratuit) à Tadoussac. Baleines 15h15. Bon-Désir : barrière électrique, arriver avant fermeture de l'accueil.",
+  around:"Bélugas, petits rorquals, parfois rorquals communs. Habillez chaud + coupe-vent même par beau temps."},
  {emoji:"🌲",title:"Parc national d'Oka",start:"2026-08-23",end:"2026-08-24",lat:45.4664,lng:-74.0553,dates:"23 → 24 août · 1 nuit",transp:"camper",
   plan:"Grande route de retour, puis dernière nuit en camping-car au bord du lac à Oka.",
-  q:"Parc national d'Oka", addr:"Camping du Parc national d'Oka — 2020 chemin d'Oka, Oka",
-  tel:"", conf:"À ~49 km de Saint-Hubert pour le retour du van le lendemain",
-  when:"Journée de route : ~539 km / 6h depuis Tadoussac. Partir tôt, se relayer au volant, pause déjeuner à Québec.",
-  around:"Plage du lac des Deux Montagnes, sentiers, calvaire d'Oka. Soirée tranquille avant de rendre le camping-car."},
-
+  q:"Parc national d'Oka",addr:"Camping du Parc national d'Oka — 2020 chemin d'Oka, Oka",tel:"",conf:"À ~49 km de Saint-Hubert pour le retour du van",
+  when:"Journée de route : ~539 km / 6h depuis Tadoussac. Partir tôt, se relayer, pause déjeuner à Québec.",
+  around:"Plage du lac des Deux Montagnes, sentiers, calvaire d'Oka."},
  {emoji:"🎓",title:"Montréal — McGill & au revoir",start:"2026-08-24",end:"2026-08-29",lat:45.5019,lng:-73.5555,dates:"24 → 29 août · 5 nuits",transp:"pied",
-  plan:"Penthouse de l'Hôtel Epik dans le Vieux-Montréal. On installe Hanaé à McGill. Nos derniers jours tous les six. 💛",
-  q:"Hôtel Epik, 171 Rue Saint-Paul Ouest, Montréal", addr:"Hôtel Epik (Penthouse) — 171 rue Saint-Paul Ouest, Vieux-Montréal",
-  tel:"+1 514-842-2634", conf:"Conf. 382059590 · check-in 15h",
+  plan:"Penthouse de l'Hôtel Epik dans le Vieux-Montréal. On installe Hanaé à McGill. Nos derniers jours à six. 💛",
+  q:"Hôtel Epik, 171 Rue Saint-Paul Ouest, Montréal",addr:"Hôtel Epik (Penthouse) — 171 rue Saint-Paul Ouest, Vieux-Montréal",tel:"+1 514-842-2634",conf:"Conf. 382059590 · check-in 15h",
   when:"24 août : retour du camping-car à Saint-Hubert (avant 11h30) · récup des valises chez Laval · check-in Epik 15h.",
-  days:["<b>28 août — early lunch chez Daniele Suisa &amp; sa famille</b> : <a target=\"_blank\" href=\"https://www.google.com/maps/search/?api=1&query=6941%20Avenue%20Monkland%20Montreal\">6941 avenue Monkland</a>, quartier NDG (chic, façon Guéliz/Hivernage). Déjeuner tôt car l'après-midi est gardé pour les préparatifs du départ.","🎁 <b>À rapporter de France</b> (pharmacie, avant le départ) : un tube de <b>Bion 3 Vitalité 50+</b> pour Daniele.","<b>29 août — les départs</b> : Adalbert, Stella, Seyna &amp; Elie → Marrakech (Air Transat TS396, 18h20) · Kim-Louis → Paris (French Bee BF761, 23h) · Hanaé reste à Montréal. Check-out 11h (bagages en consigne)."],
-  around:"Vieux-Montréal à pied : le Vieux-Port, la basilique Notre-Dame, les terrasses. Le campus de McGill pour préparer la rentrée de Hanaé."}
+  days:["<b>28 août — early lunch chez Daniele Suisa &amp; sa famille</b> : <a target=\"_blank\" href=\"https://www.google.com/maps/search/?api=1&query=6941%20Avenue%20Monkland%20Montreal\">6941 avenue Monkland</a>, quartier NDG. Déjeuner tôt (après-midi = préparatifs).","🎁 <b>À rapporter de France</b> : un tube de Bion 3 Vitalité 50+ pour Daniele.","<b>29 août — départs</b> : Adalbert, Stella, Seyna &amp; Elie → Marrakech (Air Transat TS396, 18h20) · Kim-Louis → Paris (French Bee BF761, 23h) · Hanaé reste. Check-out 11h."],
+  around:"Vieux-Montréal à pied : Vieux-Port, basilique Notre-Dame, terrasses. Le campus de McGill pour la rentrée de Hanaé."}
 ];
-
 const COL={done:"#1f7a4d",today:"#c9741d",soon:"#2f6db0"};
 const LBL={done:"Fait ✓",today:"En ce moment",soon:"À venir"};
 const today=new Date().toISOString().slice(0,10);
@@ -219,84 +261,137 @@ const mapsUrl=s=>'https://www.google.com/maps/search/?api=1&query='+enc(s.q);
 const dirUrl=s=>'https://www.google.com/maps/dir/?api=1&destination='+enc(s.q);
 const earthUrl=s=>'https://earth.google.com/web/@'+s.lat+','+s.lng+',1500a,9000d,35y,0h,45t,0r';
 
-const cont=document.getElementById('stages');
-cont.innerHTML=STAGES.map((s,i)=>{
-  const st=statusOf(s,today), tr=TR[s.transp];
-  let rb='<div class="field"><span class="ic">📍</span><span>'+s.addr+'</span></div>';
-  if(s.when) rb+='<div class="field"><span class="ic">🕒</span><span>'+s.when+'</span></div>';
-  if(s.conf) rb+='<div class="field"><span class="ic">✅</span><span>'+s.conf+'</span></div>';
-  if(s.tel) rb+='<div class="field"><span class="ic">📞</span><span>'+s.tel+'</span></div>';
-  if(s.days) rb+='<ul>'+s.days.map(d=>'<li>'+d+'</li>').join('')+'</ul>';
-  if(s.around) rb+='<div class="around"><div class="h">À faire autour</div>'+s.around+'</div>';
-  return '<div class="stage '+st+'" data-i="'+i+'">'+
-    '<div class="row1"><span class="emoji">'+s.emoji+'</span><span class="ttl">'+s.title+'</span>'+
-    '<span class="badge '+st+'">'+LBL[st]+'</span></div>'+
-    '<div class="meta"><span class="dates">'+s.dates+'</span><span class="transp" style="background:'+tr.c+'">'+tr.l+'</span></div>'+
-    '<div class="plan">'+s.plan+'</div>'+
-    '<div class="links"><a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a>'+
-    '<a class="i" target="_blank" href="'+dirUrl(s)+'">🧭 Itinéraire</a>'+
-    '<a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 Vue 3D</a></div>'+
-    '<details class="rb"><summary>Voir le détail</summary>'+rb+'</details>';
+/* ACCUEIL */
+(function(){
+  const now=document.getElementById('now');
+  const started=today>=STAGES[0].start, finished=today>STAGES[STAGES.length-1].end;
+  if(!started){
+    const days=Math.ceil((new Date(STAGES[0].start)-new Date(today))/864e5);
+    now.innerHTML='<div class="bigcount"><div class="n">J-'+days+'</div><div class="l">avant le grand départ ✈️</div></div>'+
+      '<div class="nowcard"><div class="k">Première étape</div><div class="t">'+STAGES[0].emoji+' '+STAGES[0].title+'</div><div class="d">'+STAGES[0].plan+'</div></div>';
+  }else if(finished){
+    now.innerHTML='<div class="nowcard"><div class="k">C\'est fini</div><div class="t">🍁 Un voyage inoubliable</div><div class="d">Merci pour ces moments tous ensemble !</div></div>';
+  }else{
+    const t=stageOn(today),d=stageOn(tomorrow);let h='';
+    if(t)h+='<div class="nowcard"><div class="k">📍 Aujourd\'hui</div><div class="t">'+t.emoji+' '+t.title+'</div><div class="d">'+t.plan+'</div></div>';
+    if(d)h+='<div class="nowcard tom"><div class="k">👉 Demain</div><div class="t">'+d.emoji+' '+d.title+'</div><div class="d">'+d.plan+'</div></div>';
+    now.innerHTML=h;
+  }
+})();
+
+/* PROGRAMME (timeline) */
+document.getElementById('tl').innerHTML=STAGES.map((s,i)=>{
+  const st=statusOf(s,today),tr=TR[s.transp];
+  let rb='<div class="rb"><div class="field"><span class="ic">📍</span><span>'+s.addr+'</span></div>';
+  if(s.when)rb+='<div class="field"><span class="ic">🕒</span><span>'+s.when+'</span></div>';
+  if(s.conf)rb+='<div class="field"><span class="ic">✅</span><span>'+s.conf+'</span></div>';
+  if(s.tel)rb+='<div class="field"><span class="ic">📞</span><span>'+s.tel+'</span></div>';
+  if(s.days)rb+='<ul>'+s.days.map(d=>'<li>'+d+'</li>').join('')+'</ul>';
+  if(s.around)rb+='<div class="around"><div class="h">À faire autour</div>'+s.around+'</div>';
+  rb+='<div class="maplink"><a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a><a class="i" target="_blank" href="'+dirUrl(s)+'">🧭 Itinéraire</a><a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 3D</a></div></div>';
+  return '<div class="item"><div class="rail"><div class="dot" style="background:'+COL[st]+'"></div>'+(i<STAGES.length-1?'<div class="line"></div>':'')+'</div>'+
+    '<div class="body"><details><summary><div class="date">'+s.dates+'</div>'+
+    '<div class="row1"><span class="emoji">'+s.emoji+'</span><span class="ttl">'+s.title+'</span><span class="badge '+st+'">'+LBL[st]+'</span></div>'+
+    '<div class="plan">'+s.plan+'</div><span class="transp" style="background:'+tr.c+'">'+tr.l+'</span></summary>'+rb+'</details></div></div>';
 }).join('');
 
-const now=document.getElementById('now');
-const started=today>=STAGES[0].start, finished=today>STAGES[STAGES.length-1].end;
-if(!started){
-  const days=Math.ceil((new Date(STAGES[0].start)-new Date(today))/864e5);
-  document.getElementById('cnt').textContent='J-'+days;
-  now.innerHTML+='<div class="nowcard"><div class="k">Première étape</div><div class="t">'+STAGES[0].emoji+' '+STAGES[0].title+'</div><div class="d">'+STAGES[0].plan+'</div></div>';
-}else if(finished){
-  now.innerHTML='<div class="nowcard"><div class="k">C\'est fini</div><div class="t">🍁 Un voyage inoubliable</div><div class="d">Merci pour ces moments tous ensemble !</div></div>';
-}else{
-  const t=stageOn(today),d=stageOn(tomorrow);
-  now.innerHTML='';
-  if(t)now.innerHTML+='<div class="nowcard"><div class="k">📍 Aujourd\'hui</div><div class="t">'+t.emoji+' '+t.title+'</div><div class="d">'+t.plan+'</div></div>';
-  if(d)now.innerHTML+='<div class="nowcard tom"><div class="k">👉 Demain</div><div class="t">'+d.emoji+' '+d.title+'</div><div class="d">'+d.plan+'</div></div>';
-}
-
-const REZ=[
- "✈️ Vols aller (10 août) &amp; retours (29 août) — payés",
- "🏨 Le Cantlie (10-12 &amp; 17-18), Chalet Biron au Triton (12-14), Mont-Tremblant (14-17), Hôtel Epik (24-29) — réservés",
- "🚗 Voiture Enterprise, Pacifica (11 → 17 août) — confirmée (réf. 2097899856), réglée au comptoir (~829 $ + dépôt 300 $)",
- "🚐 Camping-car Authentik / Marion (18 → 24 août) — facture finale payée (dossier 0818-frotier-de-bagneux-MV). Rien de plus à payer à Marion."
+/* RÉSERVATIONS */
+const HEB=[
+ ["🏙️","Le Cantlie","10-12 & 17-18 août","1110 rue Sherbrooke Ouest, Montréal","2 studios · réfs 1087274036, 1087277850 (10-12) et 765237, 765238 (17-18)","+1 514-842-2000"],
+ ["🛶","Seigneurie du Triton — Chalet Biron","12-14 août","12 rue Edmond, Lac-Édouard","Facture #58-470388-1196 · pension complète · payé","+1 877-393-0557"],
+ ["🏔️","Tremblant Prestige (condo)","14-17 août","95 Ch. de Kandahar #10, Mont-Tremblant","Conf. HMM259H2RW · 2 524,71 $ payé · keypad, check-in 16h","Hôte David (Airbnb)"],
+ ["⚜️","Camping de la Joie","18-20 août","640 rue Georges-Muir, Charlesbourg","Via Authentik",""],
+ ["🏞️","Parc du Fjord — Rivière-Éternité","20-22 août","91 rue Notre-Dame, Rivière-Éternité","Via Authentik · kayak inclus",""],
+ ["🐋","Camping Bon-Désir","22-23 août","198 route 138, Grandes-Bergeronnes","Via Authentik · barrière électrique",""],
+ ["🌲","Parc national d'Oka","23-24 août","2020 chemin d'Oka","Via Authentik",""],
+ ["🎓","Hôtel Epik (Penthouse)","24-29 août","171 rue Saint-Paul Ouest, Vieux-Montréal","Conf. 382059590 · check-in 15h","+1 514-842-2634"]
 ];
+const hebIn='<div class="in">'+HEB.map(h=>'<div class="subcard"><div class="nm">'+h[0]+' '+h[1]+'</div><div class="dt">'+h[2]+'</div>'+
+  '<div class="field"><span class="ic">📍</span><span>'+h[3]+'</span></div>'+
+  '<div class="field"><span class="ic">✅</span><span>'+h[4]+'</span></div>'+
+  (h[5]?'<div class="field"><span class="ic">📞</span><span>'+h[5]+'</span></div>':'')+'</div>').join('')+'</div>';
+
+const volsIn='<div class="in">'+
+ '<div class="subcard"><div class="nm">✈️ Aller — les 6</div><div class="dt">10 août</div>'+
+ '<div class="field"><span class="ic">🛫</span><span>French Bee BF760, Paris-Orly (T4) → Montréal, 19h20 → 21h00.</span></div>'+
+ '<div class="field"><span class="ic">🧳</span><span>Par personne : <b>2 valises en soute (23 kg max)</b> + 1 bagage cabine (12 kg, 115 cm).</span></div>'+
+ '<div class="field"><span class="ic">⏰</span><span>Dépose-bagages 4h avant. Cartes d\'embarquement à l\'enregistrement en ligne (~30h avant).</span></div></div>'+
+ '<div class="subcard"><div class="nm">✈️ Retour — Marrakech (4)</div><div class="dt">29 août</div>'+
+ '<div class="field"><span class="ic">🛬</span><span>Air Transat TS396, Montréal → Marrakech, 18h20 → 06h15+1.</span></div>'+
+ '<div class="field"><span class="ic">🧳</span><span>Adalbert &amp; Stella (Éco Flex) : 1 valise 23 kg + cabine. Seyna &amp; Elie (Éco) : <b class="warn">à confirmer</b> — Standard = 1 valise 23 kg, Budget = 0.</span></div></div>'+
+ '<div class="subcard"><div class="nm">✈️ Retour — Paris (Kim-Louis)</div><div class="dt">29 août</div>'+
+ '<div class="field"><span class="ic">🛬</span><span>French Bee BF761, Montréal → Paris-Orly, 23h00 → 12h00+1. 2 valises 23 kg + cabine.</span></div></div></div>';
+
+const voitIn='<div class="in"><div class="field"><span class="ic">🚗</span><span>Chrysler Pacifica 7 places (ou similaire), automatique.</span></div>'+
+ '<div class="field"><span class="ic">📅</span><span>Prise <b>11 août 15h</b> → retour <b>17 août 17h</b>.</span></div>'+
+ '<div class="field"><span class="ic">📍</span><span>Enterprise, 6100 Bd Décarie, Montréal.</span></div>'+
+ '<div class="field"><span class="ic">✅</span><span>Conf. <b>2097899856</b> · ~829 $ réglés au comptoir + dépôt 300 $ · km illimité.</span></div>'+
+ '<div class="field"><span class="ic">📞</span><span>+1 514-342-0010</span></div>'+
+ '<div class="field"><span class="ic">💡</span><span>Permis + carte de crédit au nom d\'Adalbert exigés. Stella conductrice sans frais (présente + permis).</span></div></div>';
+
+const campIn='<div class="in"><div class="field"><span class="ic">🚐</span><span>Fraserway C-XLarge · prise/retour à Saint-Hubert (8900 Ch. de Chambly).</span></div>'+
+ '<div class="field"><span class="ic">📅</span><span>Prise <b>18 août</b> (8h30-15h) → retour <b>24 août</b> (avant 11h30).</span></div>'+
+ '<div class="field"><span class="ic">✅</span><span>Via Authentik / Marion — facture P162665, <b>1 591,26 € payés, solde 0</b>. Caution 7 500 $ bloquée sur la carte.</span></div>'+
+ '<div class="field"><span class="ic">🎟️</span><span>Inclus : 4 campings + kayak de mer (21) + safari baleines (22). Roadbook &amp; vouchers : <a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client</a>.</span></div>'+
+ '<div class="field"><span class="ic">📞</span><span>Fraserway +1 604-527-1102 · Marion +1 514-769-0101 p.215</span></div></div>';
+
+document.getElementById('rez').innerHTML=
+ '<details class="acc"><summary><span class="e">🏨</span><div><div class="h">Hébergements</div><div class="s">8 lieux — tous réservés</div></div><span class="chev">›</span></summary>'+hebIn+'</details>'+
+ '<details class="acc"><summary><span class="e">✈️</span><div><div class="h">Vols & bagages</div><div class="s">Aller 10 août · retours 29 août</div></div><span class="chev">›</span></summary>'+volsIn+'</details>'+
+ '<details class="acc"><summary><span class="e">🚗</span><div><div class="h">Voiture</div><div class="s">Enterprise · 11-17 août</div></div><span class="chev">›</span></summary>'+voitIn+'</details>'+
+ '<details class="acc"><summary><span class="e">🚐</span><div><div class="h">Camping-car</div><div class="s">Authentik · 18-24 août · payé</div></div><span class="chev">›</span></summary>'+campIn+'</details>';
+
+/* DOCS — checklist */
 const FAIRE=[
- "AVE ou visa d'entrée au Canada pour chacun des 6 (selon le passeport)",
- "Permis de conduire international + carte de crédit au nom d'Adalbert (exigés pour Enterprise ET le camping-car)",
- "Hanaé : CAQ + permis d'études (McGill)",
- "Télécharger &amp; imprimer le Roadbook + les vouchers Authentik : <a href=\"https://www.authentikcanada.com/fr/espace-client\" target=\"_blank\" style=\"color:var(--soon)\">Espace Client Authentik</a>",
+ "AVE pour les 5 (passeports français) — 7 $ CAD chacun sur canada.ca",
+ "Hanaé : CAQ + permis d'études (McGill) — à lancer vite",
+ "Permis de conduire international + carte de crédit au nom d'Adalbert",
+ "Confirmer les bagages Seyna &amp; Elie sur Air Transat (Éco = 1 valise ou 0 ?)",
+ "Télécharger &amp; imprimer le Roadbook + vouchers Authentik (Espace Client)",
  "Réserver les accès parcs SÉPAQ (Fjord, Oka) — inclus si on dort dans le parc",
  "🎁 Rapporter de France un tube de Bion 3 Vitalité 50+ pour Daniele",
- "Une polaire / un coupe-vent par personne (fjord &amp; baleines)",
- "Banque : plafonds relevés + caution camping-car 7 500 $ CAD (RDV CIC)"
+ "Banque : plafonds relevés + caution camping-car 7 500 $ (RDV CIC)"
 ];
-document.getElementById('rez').innerHTML=REZ.map(r=>'<div class="li"><span class="ic">✓</span><span>'+r+'</span></div>').join('');
 const fc=document.getElementById('faire');
 fc.innerHTML=FAIRE.map((f,i)=>'<label data-k="todo_'+i+'"><input type="checkbox"><span>'+f+'</span></label>').join('');
 fc.querySelectorAll('label').forEach(l=>{const k=l.dataset.k,cb=l.querySelector('input');cb.checked=localStorage.getItem(k)==='1';l.classList.toggle('on',cb.checked);cb.addEventListener('change',()=>{localStorage.setItem(k,cb.checked?'1':'0');l.classList.toggle('on',cb.checked);});});
 
-function initMap(){
-  if(typeof L==='undefined'){document.getElementById('map').style.display='none';return;}
-  const map=L.map('map',{scrollWheelZoom:false}).setView([46.8,-72.5],6);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
-  for(let i=0;i<STAGES.length-1;i++){
-    const a=STAGES[i],b=STAGES[i+1],legDone=today>b.end;
-    L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color:legDone?COL.done:COL.soon,weight:4,opacity:legDone?.9:.55,dashArray:legDone?null:"2,9",lineCap:"round"}).addTo(map);
-  }
-  const markers=[];
-  STAGES.forEach(s=>{
-    const st=statusOf(s,today);
-    const icon=L.divIcon({className:'',iconSize:[34,34],iconAnchor:[17,34],popupAnchor:[0,-32],html:'<div class="marker" style="background:'+COL[st]+'"><span>'+s.emoji+'</span></div>'});
-    const html='<div class="pop"><div class="pt">'+s.emoji+' '+s.title+'</div><div class="pd">'+s.dates+'</div><div class="px">'+s.plan+'</div><div class="btns">'+
-      '<a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a><a class="i" target="_blank" href="'+dirUrl(s)+'">🧭 Itinéraire</a><a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 3D</a></div></div>';
-    markers.push(L.marker([s.lat,s.lng],{icon}).addTo(map).bindPopup(html));
-  });
-  map.fitBounds(L.latLngBounds(STAGES.map(s=>[s.lat,s.lng])).pad(0.15));
-  document.querySelectorAll('.stage').forEach(el=>{
-    el.addEventListener('click',e=>{ if(e.target.closest('a,summary,details'))return; const i=+el.dataset.i; map.flyTo([STAGES[i].lat,STAGES[i].lng],9,{duration:.8}); markers[i].openPopup(); document.getElementById('map').scrollIntoView({behavior:'smooth',block:'start'}); });
-  });
+/* DOCS — à ne pas oublier */
+const PK={
+ "Santé":["Anti-moustiques (DEET / icaridine) + après-piqûre","Trousse premiers soins : pansements (+ ampoules), antiseptique, paracétamol/ibuprofène, antihistaminique, anti-diarrhéique","Médicaments perso + ordonnances (en cabine)","Crème solaire SPF 50 + stick à lèvres"],
+ "Vêtements clés":["1 polaire chaude (soirées, fjord, baleines)","1 veste imperméable / coupe-vent","Bonnet léger pour le zodiac baleines","Bonnes chaussures de marche (pas haute montagne) + sandales/tongs","Maillots de bain (lac, plage)"],
+ "Pratique":["Adaptateur de prise Amérique du Nord (type A/B)","Batterie externe + chargeurs","Gourde, lampe frontale, serviette microfibre","Jumelles (baleines)","Sacs zip (kayak) + lessive (lavage à Tremblant)"]
+};
+document.getElementById('pk').innerHTML=Object.entries(PK).map(([h,arr])=>'<h4>'+h+'</h4><ul>'+arr.map(x=>'<li>'+x+'</li>').join('')+'</ul>').join('');
+
+/* DOCS — contacts */
+const CT=[["Le Cantlie (Montréal)","514-842-2000"],["Aviation La Tuque (hydravion)","819-523-9616"],["Seigneurie du Triton","1-877-393-0557"],["Enterprise (voiture)","514-342-0010"],["Fraserway (camping-car)","604-527-1102"],["Baleines (Tadoussac)","418-579-8763"],["Hôtel Epik","514-842-2634"],["Air Transat","1-877-872-6728"],["Marion (Authentik)","514-769-0101 p.215"],["Adalbert (WhatsApp)","+212 661 399 838"]];
+document.getElementById('ct').innerHTML=CT.map(c=>'<a href="tel:'+c[1].replace(/[^0-9+]/g,'')+'"><span>'+c[0]+'</span><b>'+c[1]+'</b></a>').join('');
+
+/* NAV */
+let mapReady=false,map;
+function go(v){
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  window.scrollTo(0,0);
+  if(v==='carte')initMap();
 }
-if(document.readyState!=='loading')initMap();else document.addEventListener('DOMContentLoaded',initMap);
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.v)));
+
+function initMap(){
+  if(mapReady||typeof L==='undefined')return; mapReady=true;
+  map=L.map('map',{scrollWheelZoom:false}).setView([46.8,-72.5],6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
+  for(let i=0;i<STAGES.length-1;i++){const a=STAGES[i],b=STAGES[i+1],legDone=today>b.end;
+    L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color:legDone?COL.done:COL.soon,weight:4,opacity:legDone?.9:.55,dashArray:legDone?null:"2,9",lineCap:"round"}).addTo(map);}
+  STAGES.forEach(s=>{const st=statusOf(s,today);
+    const icon=L.divIcon({className:'',iconSize:[32,32],iconAnchor:[16,32],popupAnchor:[0,-30],html:'<div class="marker" style="background:'+COL[st]+'"><span>'+s.emoji+'</span></div>'});
+    const html='<div class="pop"><div class="pt">'+s.emoji+' '+s.title+'</div><div class="pd">'+s.dates+'</div><a target="_blank" href="'+mapsUrl(s)+'" style="color:#2f6db0;font-weight:700;text-decoration:none;font-size:12px">📍 Ouvrir dans Google Maps</a></div>';
+    L.marker([s.lat,s.lng],{icon}).addTo(map).bindPopup(html);});
+  map.fitBounds(L.latLngBounds(STAGES.map(s=>[s.lat,s.lng])).pad(0.12));
+  setTimeout(()=>map.invalidateSize(),200);
+}
 </script>
 </body>
 </html>
