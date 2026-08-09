@@ -65,7 +65,15 @@
   .rb .around .h{font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--done);margin-bottom:3px}
   .maplink{display:flex;gap:6px;margin:11px 0 0}
   .maplink a{flex:1;text-align:center;text-decoration:none;font-size:11.5px;font-weight:700;padding:7px 6px;border-radius:9px}
-  .maplink a.m{background:#eaf1f8;color:#2f6db0}.maplink a.i{background:#fbf1e6;color:#c9741d}.maplink a.e{background:#eef7f0;color:#1f7a4d}
+  .maplink a.w{background:#e6f7f0;color:#0e8a8a}.maplink a.i{background:#eaf1f8;color:#2f6db0}.maplink a.m{background:#f1eee8;color:#6d665c}.maplink a.e{background:#eef7f0;color:#1f7a4d}
+  .wx{display:inline-block;font-size:12px;color:var(--soft);margin-left:8px;white-space:nowrap}
+  .wx b{color:var(--ink);font-weight:600}
+  .ticker{background:#1d1b17;color:#fff;border-radius:12px;margin:0 0 12px;overflow:hidden;position:relative;height:38px}
+  .ticker .lab{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;padding:0 10px;background:#c0392b;font-size:11px;font-weight:800;letter-spacing:.04em;z-index:2}
+  .ticker .track{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;white-space:nowrap;padding-left:76px;will-change:transform;animation:tick 60s linear infinite}
+  .ticker a{color:#fff;text-decoration:none;font-size:13px;margin-right:34px;opacity:.95}
+  .ticker a::before{content:"● ";color:#e07a5f;font-size:9px;vertical-align:middle}
+  @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
   /* carte */
   #map{height:calc(100vh - 210px);min-height:360px;border-radius:14px;border:1px solid var(--line);z-index:1}
@@ -127,6 +135,7 @@
   <header><h1>Notre voyage 🍁</h1><div class="sub">Québec · 10 → 29 août 2026</div></header>
 
   <section class="view on" id="v-accueil">
+    <div class="ticker" id="news" style="display:none"><div class="lab">ACTUS</div><div class="track" id="newstrack"></div></div>
     <div id="now"></div>
     <h2 class="sec">🧭 Le voyage en un coup d'œil</h2>
     <div class="glance">
@@ -291,6 +300,7 @@ const enc=encodeURIComponent;
 const mapsUrl=s=>'https://www.google.com/maps/search/?api=1&query='+enc(s.q);
 const dirUrl=s=>'https://www.google.com/maps/dir/?api=1&destination='+enc(s.q);
 const earthUrl=s=>'https://earth.google.com/web/@'+s.lat+','+s.lng+',1500a,9000d,35y,0h,45t,0r';
+const wazeUrl=s=>'https://waze.com/ul?ll='+s.lat+','+s.lng+'&navigate=yes';
 
 /* ACCUEIL */
 (function(){
@@ -319,11 +329,11 @@ document.getElementById('tl').innerHTML=STAGES.map((s,i)=>{
   if(s.tel)rb+='<div class="field"><span class="ic">📞</span><span>'+s.tel+'</span></div>';
   if(s.days)rb+='<ul>'+s.days.map(d=>'<li>'+d+'</li>').join('')+'</ul>';
   if(s.around)rb+='<div class="around"><div class="h">À faire autour</div>'+s.around+'</div>';
-  rb+='<div class="maplink"><a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a><a class="i" target="_blank" href="'+dirUrl(s)+'">🧭 Itinéraire</a><a class="e" target="_blank" href="'+earthUrl(s)+'">🌍 3D</a></div></div>';
+  rb+='<div class="maplink"><a class="w" target="_blank" href="'+wazeUrl(s)+'">🚗 Waze</a><a class="i" target="_blank" href="'+dirUrl(s)+'">🗺️ Google Maps</a><a class="m" target="_blank" href="'+mapsUrl(s)+'">📍 Carte</a></div></div>';
   return '<div class="item"><div class="rail"><div class="dot" style="background:'+COL[st]+'"></div>'+(i<STAGES.length-1?'<div class="line"></div>':'')+'</div>'+
     '<div class="body"><details><summary><div class="date">'+s.dates+'</div>'+
     '<div class="row1"><span class="emoji">'+s.emoji+'</span><span class="ttl">'+s.title+'</span><span class="badge '+st+'">'+LBL[st]+'</span></div>'+
-    '<div class="plan">'+s.plan+'</div><span class="transp" style="background:'+tr.c+'">'+tr.l+'</span></summary>'+rb+'</details></div></div>';
+    '<div class="plan">'+s.plan+'</div><span class="transp" style="background:'+tr.c+'">'+tr.l+'</span><span class="wx" id="wx'+i+'"></span></summary>'+rb+'</details></div></div>';
 }).join('');
 
 /* RÉSERVATIONS */
@@ -347,7 +357,8 @@ const volsIn='<div class="in">'+
  '<div class="field"><span class="ic">🛫</span><span>French Bee BF760, Paris-Orly (T4) → Montréal, 19h20 → 21h00.</span></div>'+
  '<div class="field"><span class="ic">🧳</span><span>Par personne : <b>2 valises en soute (23 kg max)</b> + 1 bagage cabine (12 kg, 115 cm).</span></div>'+
  '<div class="field"><span class="ic">⏰</span><span>Dépose-bagages 4h avant. Cartes d\'embarquement à l\'enregistrement en ligne (~30h avant).</span></div>'+
- '<div class="field"><span class="ic">🎫</span><span>Réf. : <b>GD4WR2</b> (Adalbert &amp; Stella) · <b>GD4JP7</b> (Hanaé, Seyna, Elie) · <b>GDP6B4</b> (Kim-Louis)</span></div></div>'+
+ '<div class="field"><span class="ic">🎫</span><span>Réf. : <b>GD4WR2</b> (Adalbert &amp; Stella) · <b>GD4JP7</b> (Hanaé, Seyna, Elie) · <b>GDP6B4</b> (Kim-Louis)</span></div>'+
+ '<div class="field"><span class="ic">💺</span><span>Places : Kim-Louis <b>12C</b> · Hanaé, Seyna &amp; Elie en <b>12A, 14A, 14C</b> (réparties à l\'enregistrement) · parents attribués à l\'enregistrement.</span></div></div>'+
  '<div class="subcard"><div class="nm">✈️ Retour — Marrakech (4)</div><div class="dt">29 août</div>'+
  '<div class="field"><span class="ic">🛬</span><span>Air Transat TS396, Montréal → Marrakech, 18h20 → 06h15+1.</span></div>'+
  '<div class="field"><span class="ic">🧳</span><span><b>1 valise en soute (23 kg) par personne</b> + 1 cabine. Adalbert &amp; Stella (Éco Flex), Seyna &amp; Elie (Éco Standard). ⚠️ Moins que l\'aller (2 valises), pensez-y pour les achats.</span></div>'+
@@ -411,6 +422,39 @@ document.getElementById('pk').innerHTML=Object.entries(PK).map(([h,arr])=>'<h4>'
 /* DOCS — contacts */
 const CT=[["Le Cantlie (Montréal)","514-842-2000"],["Aviation La Tuque (hydravion)","819-523-9616"],["Seigneurie du Triton","1-877-393-0557"],["Enterprise (voiture)","514-342-0010"],["Fraserway (camping-car)","604-527-1102"],["Baleines (Tadoussac)","418-579-8763"],["Hôtel Epik","514-842-2634"],["Air Transat","1-877-872-6728"],["Marion (Authentik)","514-769-0101 p.215"],["Adalbert (WhatsApp)","+212 661 399 838"]];
 document.getElementById('ct').innerHTML=CT.map(c=>'<a href="tel:'+c[1].replace(/[^0-9+]/g,'')+'"><span>'+c[0]+'</span><b>'+c[1]+'</b></a>').join('');
+
+/* METEO par etape (Open-Meteo, gratuit, sans cle) — se remplit a l approche */
+(function(){
+  var lat=STAGES.map(function(s){return s.lat}).join(','), lng=STAGES.map(function(s){return s.lng}).join(',');
+  var url='https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lng+'&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=16';
+  function ico(c){return c===0?'☀️':c<=3?'⛅':c<=48?'🌫️':c<=67?'🌧️':c<=77?'❄️':c<=82?'🌦️':'⛈️';}
+  fetch(url).then(function(r){return r.json()}).then(function(d){
+    var arr=Array.isArray(d)?d:[d];
+    STAGES.forEach(function(s,i){
+      var w=arr[i]; if(!w||!w.daily)return;
+      var idx=w.daily.time.indexOf(s.start), el=document.getElementById('wx'+i);
+      if(!el||idx<0)return;
+      el.innerHTML=ico(w.daily.weather_code[idx])+' <b>'+Math.round(w.daily.temperature_2m_max[idx])+'°</b>/'+Math.round(w.daily.temperature_2m_min[idx])+'°';
+    });
+  }).catch(function(){});
+})();
+
+/* ACTUS Quebec (Google News via proxy CORS, au mieux) */
+(function(){
+  var rss='https://news.google.com/rss/search?q='+encodeURIComponent('Québec OR Montréal OR Tadoussac OR Charlevoix OR Saguenay')+'&hl=fr-CA&gl=CA&ceid=CA:fr';
+  var prox='https://api.allorigins.win/raw?url='+encodeURIComponent(rss);
+  var box=document.getElementById('news'), track=document.getElementById('newstrack');
+  if(!box||!track)return;
+  fetch(prox).then(function(r){return r.text()}).then(function(x){
+    var doc=new DOMParser().parseFromString(x,'text/xml');
+    var items=[].slice.call(doc.querySelectorAll('item')).slice(0,8);
+    if(!items.length)throw 0;
+    var html=items.map(function(it){var tn=it.querySelector('title'),ln=it.querySelector('link');var t=tn?tn.textContent:'';var l=ln?ln.textContent:'#';return '<a href="'+l+'" target="_blank">'+t.replace(/[<>]/g,'')+'</a>';}).join('');
+    track.innerHTML=html+html; box.style.display='block';
+  }).catch(function(){
+    track.innerHTML='<a href="https://news.google.com/search?q=Qu%C3%A9bec&hl=fr-CA" target="_blank">Actualités du Québec — ouvrir Google News</a>'; box.style.display='block';
+  });
+})();
 
 /* NAV */
 let mapReady=false,map;
