@@ -174,7 +174,7 @@
     </div>
     <div class="info">
       <h3>📄 Vouchers &amp; roadbook</h3>
-      Camping-car Authentik payé (facture P162665, 1 591,26 €, solde 0). Roadbook + vouchers imprimables dans l'<a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client Authentik</a>.
+      Camping-car Authentik payé (facture P162665, 1 591,26 €, solde 0). Le détail des campings et activités est dans l'onglet <b>Réservations</b> ; le roadbook complet reste en secours dans l'<a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client</a>.
     </div>
 
     <h2 class="sec">✅ À faire avant le départ</h2>
@@ -331,10 +331,10 @@ const HEB=[
  ["🏙️","Le Cantlie","10-12 & 17-18 août","1110 rue Sherbrooke Ouest, Montréal","2 studios · réfs 1087274036, 1087277850 (10-12) et 765237, 765238 (17-18)","+1 514-842-2000"],
  ["🛶","Seigneurie du Triton — Chalet Biron","12-14 août","12 rue Edmond, Lac-Édouard","Facture #58-470388-1196 · pension complète · payé","+1 877-393-0557"],
  ["🏔️","Tremblant Prestige (condo)","14-17 août","95 Ch. de Kandahar #10, Mont-Tremblant","Conf. HMM259H2RW · 2 524,71 $ payé · keypad, check-in 16h","Hôte David (Airbnb)"],
- ["⚜️","Camping de la Joie","18-20 août","640 rue Georges-Muir, Charlesbourg","Via Authentik",""],
- ["🏞️","Parc du Fjord — Rivière-Éternité","20-22 août","91 rue Notre-Dame, Rivière-Éternité","Via Authentik · kayak inclus",""],
- ["🐋","Camping Bon-Désir","22-23 août","198 route 138, Grandes-Bergeronnes","Via Authentik · barrière électrique",""],
- ["🌲","Parc national d'Oka","23-24 août","2020 chemin d'Oka","Via Authentik",""],
+ ["⚜️","Camping de la Joie","18-20 août · 2 nuits","640 rue Georges-Muir, Charlesbourg","Réservé via Authentik · dossier 0818-frotier-de-bagneux-MV · emplacement 3 services (eau/élec/égouts)",""],
+ ["🏞️","Parc du Fjord — Rivière-Éternité","20-22 août · 2 nuits","91 rue Notre-Dame, Rivière-Éternité","Via Authentik · dossier 0818-frotier-de-bagneux-MV · emplacement 2 services (eau/élec) · kayak de mer inclus le 21",""],
+ ["🐋","Camping Bon-Désir","22-23 août · 1 nuit","198 route 138, Grandes-Bergeronnes","Via Authentik · dossier 0818-frotier-de-bagneux-MV · emplacement 3 services · barrière électrique · baleines le 22",""],
+ ["🌲","Parc national d'Oka","23-24 août · 1 nuit","2020 chemin d'Oka","Via Authentik · dossier 0818-frotier-de-bagneux-MV · emplacement 3 services",""],
  ["🎓","Hôtel Epik (Penthouse)","24-29 août","171 rue Saint-Paul Ouest, Vieux-Montréal","Conf. 382059590 · check-in 15h","+1 514-842-2634"]
 ];
 const hebIn='<div class="in">'+HEB.map(h=>'<div class="subcard"><div class="nm">'+h[0]+' '+h[1]+'</div><div class="dt">'+h[2]+'</div>'+
@@ -346,12 +346,15 @@ const volsIn='<div class="in">'+
  '<div class="subcard"><div class="nm">✈️ Aller — les 6</div><div class="dt">10 août</div>'+
  '<div class="field"><span class="ic">🛫</span><span>French Bee BF760, Paris-Orly (T4) → Montréal, 19h20 → 21h00.</span></div>'+
  '<div class="field"><span class="ic">🧳</span><span>Par personne : <b>2 valises en soute (23 kg max)</b> + 1 bagage cabine (12 kg, 115 cm).</span></div>'+
- '<div class="field"><span class="ic">⏰</span><span>Dépose-bagages 4h avant. Cartes d\'embarquement à l\'enregistrement en ligne (~30h avant).</span></div></div>'+
+ '<div class="field"><span class="ic">⏰</span><span>Dépose-bagages 4h avant. Cartes d\'embarquement à l\'enregistrement en ligne (~30h avant).</span></div>'+
+ '<div class="field"><span class="ic">🎫</span><span>Réf. : <b>GD4WR2</b> (Adalbert &amp; Stella) · <b>GD4JP7</b> (Hanaé, Seyna, Elie) · <b>GDP6B4</b> (Kim-Louis)</span></div></div>'+
  '<div class="subcard"><div class="nm">✈️ Retour — Marrakech (4)</div><div class="dt">29 août</div>'+
  '<div class="field"><span class="ic">🛬</span><span>Air Transat TS396, Montréal → Marrakech, 18h20 → 06h15+1.</span></div>'+
- '<div class="field"><span class="ic">🧳</span><span>Adalbert &amp; Stella (Éco Flex) : 1 valise 23 kg + cabine. Seyna &amp; Elie (Éco) : <b class="warn">à confirmer</b> — Standard = 1 valise 23 kg, Budget = 0.</span></div></div>'+
+ '<div class="field"><span class="ic">🧳</span><span><b>1 valise en soute (23 kg) par personne</b> + 1 cabine. Adalbert &amp; Stella (Éco Flex), Seyna &amp; Elie (Éco Standard). ⚠️ Moins que l\'aller (2 valises), pensez-y pour les achats.</span></div>'+
+ '<div class="field"><span class="ic">🎫</span><span>Réf. : <b>DUB9EJ</b> (Adalbert &amp; Stella) · <b>LEHVIC</b> (Seyna &amp; Elie)</span></div></div>'+
  '<div class="subcard"><div class="nm">✈️ Retour — Paris (Kim-Louis)</div><div class="dt">29 août</div>'+
- '<div class="field"><span class="ic">🛬</span><span>French Bee BF761, Montréal → Paris-Orly, 23h00 → 12h00+1. 2 valises 23 kg + cabine.</span></div></div></div>';
+ '<div class="field"><span class="ic">🛬</span><span>French Bee BF761, Montréal → Paris-Orly, 23h00 → 12h00+1. 2 valises 23 kg + cabine.</span></div>'+
+ '<div class="field"><span class="ic">🎫</span><span>Réf. : <b>GDP6B4</b> (aller-retour)</span></div></div></div>';
 
 const voitIn='<div class="in"><div class="field"><span class="ic">🚗</span><span>Chrysler Pacifica 7 places (ou similaire), automatique.</span></div>'+
  '<div class="field"><span class="ic">📅</span><span>Prise <b>11 août 15h</b> → retour <b>17 août 17h</b>.</span></div>'+
@@ -360,7 +363,7 @@ const voitIn='<div class="in"><div class="field"><span class="ic">🚗</span><sp
  '<div class="field"><span class="ic">📞</span><span>+1 514-342-0010</span></div>'+
  '<div class="field"><span class="ic">💡</span><span>Permis + carte de crédit au nom d\'Adalbert exigés. Stella conductrice sans frais (présente + permis).</span></div></div>';
 
-const campIn='<div class="in"><div class="field"><span class="ic">🚐</span><span>Fraserway C-XLarge · prise/retour à Saint-Hubert (8900 Ch. de Chambly).</span></div>'+
+const campIn='<div class="in"><div class="field"><span class="ic">🚐</span><span>Fraserway C-XLarge · dossier 202620250 · prise/retour à Saint-Hubert (8900 Ch. de Chambly).</span></div>'+
  '<div class="field"><span class="ic">📅</span><span>Prise <b>18 août</b> (8h30-15h) → retour <b>24 août</b> (avant 11h30).</span></div>'+
  '<div class="field"><span class="ic">✅</span><span>Via Authentik / Marion — facture P162665, <b>1 591,26 € payés, solde 0</b>. Caution 7 500 $ bloquée sur la carte.</span></div>'+
  '<div class="field"><span class="ic">🎟️</span><span>Inclus : 4 campings + kayak de mer (21) + safari baleines (22). Roadbook &amp; vouchers : <a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client</a>.</span></div>'+
@@ -387,8 +390,8 @@ const FAIRE=[
  "AVE pour les 5 (passeports français) — 7 $ CAD chacun sur canada.ca",
  "Hanaé : CAQ + permis d'études (McGill) — à lancer vite",
  "Permis de conduire international + carte de crédit au nom d'Adalbert",
- "Confirmer les bagages Seyna &amp; Elie sur Air Transat (Éco = 1 valise ou 0 ?)",
- "Télécharger &amp; imprimer le Roadbook + vouchers Authentik (Espace Client)",
+ "Retour Air Transat : 1 valise 23 kg/pers seulement — acheter un bagage en + si besoin",
+ "Campings &amp; activités : tout est déjà dans l'onglet Réservations. Roadbook complet en secours dans l'Espace Client Authentik",
  "Réserver les accès parcs SÉPAQ (Fjord, Oka) — inclus si on dort dans le parc",
  "🎁 Rapporter de France un tube de Bion 3 Vitalité 50+ pour Daniele",
  "Banque : plafonds relevés + caution camping-car 7 500 $ (RDV CIC)"
