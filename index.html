@@ -104,6 +104,14 @@
   .pk ul{padding-left:18px}.pk li{font-size:13.5px;line-height:1.5;margin-bottom:3px}
   .ct a{display:flex;justify-content:space-between;text-decoration:none;color:var(--ink);font-size:13.5px;padding:9px 0;border-top:1px solid var(--line)}
   .ct a:first-child{border-top:none}.ct a b{color:var(--soon);font-weight:600}
+  .sos911{display:block;background:#c0392b;color:#fff;border-radius:16px;padding:18px;text-align:center;text-decoration:none;margin-bottom:8px}
+  .sos911 .n{font-size:34px;font-weight:800;line-height:1}
+  .sos911 .l{font-size:12px;opacity:.92;margin-top:5px}
+  .sositem{padding:8px 0;border-top:1px solid var(--line)}
+  .sositem:first-child{border-top:none}
+  .sositem a{color:var(--soon);text-decoration:none;font-weight:600}
+  .info .d{font-size:12.5px;color:var(--soft);line-height:1.45;margin-top:2px}
+  .warn2{margin-top:9px;background:#fbf1e6;border-radius:10px;padding:9px 11px;font-size:13px;line-height:1.5;color:#8a5a12}
 
   /* nav bas */
   nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
@@ -178,14 +186,37 @@
     <h2 class="sec">☎️ Contacts utiles</h2>
     <div class="info ct" id="ct"></div>
   </section>
+
+  <section class="view" id="v-sos">
+    <a class="sos911" href="tel:911"><div class="n">911</div><div class="l">Urgence vitale au Canada — police · pompiers · ambulance</div></a>
+    <h2 class="sec">🏥 Assistance médicale 24h/24</h2>
+    <div class="info">
+      <div class="sositem"><a href="tel:+33142990202">☎️ Allianz Travel — +33 1 42 99 02 02</a><div class="d">Le plus simple. Votre assurance voyage (médical, rapatriement, annulation, bagages), valable 10 → 30 août.</div></div>
+      <div class="sositem"><a href="tel:+33388398416">☎️ Assistance carte CIC — service GOLD : +33 3 88 39 84 16</a><div class="d">Frais médicaux, rapatriement, hospitalisation — 90 jours, monde entier. Aussi medical@votreassistance.fr.</div></div>
+      <div class="sositem"><a href="https://cic-cartes.votre-assistance.fr/#/assistance" target="_blank">🌐 Portail assistance CIC — trouver un hôpital, téléconsultation</a><div class="d"><b>cic-cartes.votre-assistance.fr</b> : hôpitaux à proximité, traducteur médical, notice des garanties, demander une attestation. La « porte » qui répond à tout.</div></div>
+      <div class="warn2">⚠️ Réflexe : sauf urgence vitale, <b>appelle l'assistance AVANT d'engager des frais</b>. Donne : le nom du titulaire de la carte (Adalbert / Stella), les accompagnants, et la banque = <b>CIC</b>.</div>
+    </div>
+    <h2 class="sec">💳 Perte ou vol de la carte</h2>
+    <div class="info"><div class="sositem"><a href="tel:+33388398578">Opposition CIC depuis l'étranger — +33 3 88 39 85 78</a></div></div>
+    <h2 class="sec">📄 Vos contrats d'assurance</h2>
+    <div class="info">
+      Assurance voyage <b>Allianz Travel</b> (via French Bee) — Canada, 10 → 30 août :
+      <div class="sositem">Hanaé — contrat <b>FRBFRA200016577</b></div>
+      <div class="sositem">Kim-Louis — contrat <b>FRBFRA600016201</b></div>
+      <div class="sositem">Adalbert, Stella, Seyna, Elie — voir « attestation famille »</div>
+      <div class="d" style="margin-top:6px">Espace client : allianz-protection.com · remboursement +33 1 42 99 03 95</div>
+    </div>
+    <div class="info" style="border-color:#f0dcbd;background:#fff8ee">📌 <b>Avant de partir :</b> note le numéro d'assistance <b>au dos de la carte CIC</b> et donne-le à Stella + aux grands, et garde une <b>attestation d'assurance</b> (photo ou imprimée) sur chaque téléphone.</div>
+  </section>
 </div>
 
 <nav id="nav">
   <button data-v="accueil" class="on"><span class="e">🏠</span><span class="t">Accueil</span></button>
-  <button data-v="programme"><span class="e">🗓️</span><span class="t">Programme</span></button>
+  <button data-v="programme"><span class="e">🗓️</span><span class="t">Prog.</span></button>
   <button data-v="carte"><span class="e">🗺️</span><span class="t">Carte</span></button>
-  <button data-v="reservations"><span class="e">🎫</span><span class="t">Réserv.</span></button>
+  <button data-v="reservations"><span class="e">🎫</span><span class="t">Résa</span></button>
   <button data-v="docs"><span class="e">📋</span><span class="t">Docs</span></button>
+  <button data-v="sos"><span class="e">🚨</span><span class="t">SOS</span></button>
 </nav>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
