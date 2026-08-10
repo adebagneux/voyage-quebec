@@ -380,7 +380,7 @@ const campIn='<div class="in">'+
  '<div class="field"><span class="ic">✅</span><span>Réservation <b>202620250</b> confirmée le 10 juil. — Class C X-Large, 6 pers. (rien à voir avec Authentik).</span></div>'+
  '<div class="field"><span class="ic">📅</span><span>Prise <b>18 août</b> (8h30-15h) → retour <b>24 août</b> (8h30-11h30) · 1 400 km inclus.</span></div>'+
  '<div class="field"><span class="ic">📍</span><span>Fraserway RV, 8900 Ch. de Chambly, Saint-Hubert · <b>navette gratuite</b> depuis les hôtels de Montréal.</span></div>'+
- '<div class="field"><span class="ic">💳</span><span>Total ~3 746 $ CAD · dépôt 750 $ payé · <b class="warn">solde à régler via le check-in en ligne</b> (identifiant <b>202620250</b> / mot de passe <b>Frotier de Bagneux</b>). Pré-autorisation caution <b>7 500 $</b> à la prise.</span></div>'+
+ '<div class="field"><span class="ic">💳</span><span><b class="warn">Solde à régler : CA$ 4 495,89</b> — via le check-in en ligne (identifiant <b>202620250</b> / mot de passe <b>Frotier de Bagneux</b>) sur rent.fraserway.com. Pré-autorisation de caution <b>7 500 $</b> en plus, à la prise du véhicule.</span></div>'+
  '<div class="field"><span class="ic">📞</span><span>Fraserway +1 604-527-1102 · 1-800-661-2441</span></div>'+
  navRow('Fraserway RV Rentals, 8900 Chemin de Chambly, Saint-Hubert')+'</div>'+
  '<div class="subcard"><div class="nm">🏕️ Campings &amp; activités — Authentik / Marion</div>'+
@@ -448,28 +448,32 @@ document.getElementById('ct').innerHTML=CT.map(c=>'<a href="tel:'+c[1].replace(/
   }).catch(function(){});
 })();
 
-/* ACTUS Quebec — fil qui defile (rss2json fiable, secours allorigins, puis brèves) */
+/* ACTUS Quebec — bandeau TOUJOURS visible, se remplit d'infos reelles si possible */
 (function(){
   var box=document.getElementById('news'), track=document.getElementById('newstrack');
   if(!box||!track)return;
-  var gnews='https://news.google.com/rss/search?q='+encodeURIComponent('Québec OR Montréal OR Tadoussac OR Charlevoix OR Saguenay OR Mont-Tremblant')+'&hl=fr-CA&gl=CA&ceid=CA:fr';
+  box.style.display='block';
+  track.innerHTML='<a>Chargement des actualités du Québec…</a>';
+  var done=false;
   function render(items){
-    if(!items||!items.length)return false;
+    if(done||!items||!items.length)return done;
     var html=items.slice(0,10).map(function(it){var t=(it.title||'').replace(/[<>]/g,'');var l=it.link||'#';return '<a href="'+l+'" target="_blank">'+t+'</a>';}).join('');
-    track.innerHTML=html+html; box.style.display='block'; return true;
+    track.innerHTML=html+html; done=true; return true;
   }
+  function fallback(){
+    if(done)return; done=true;
+    var f=[['Radio-Canada — actualité','https://ici.radio-canada.ca/'],['État des routes — Québec 511','https://www.quebec511.info/'],['Météo — Environnement Canada','https://meteo.gc.ca/'],['Actualités du Québec — Google News','https://news.google.com/search?q=Qu%C3%A9bec&hl=fr-CA']];
+    track.innerHTML=f.concat(f).map(function(a){return '<a href="'+a[1]+'" target="_blank">'+a[0]+'</a>';}).join('');
+  }
+  var gnews='https://news.google.com/rss/search?q='+encodeURIComponent('Québec OR Montréal OR Tadoussac OR Charlevoix OR Saguenay OR Mont-Tremblant')+'&hl=fr-CA&gl=CA&ceid=CA:fr';
+  setTimeout(fallback,7000);
   fetch('https://api.rss2json.com/v1/api.json?count=12&rss_url='+encodeURIComponent(gnews)).then(function(r){return r.json()}).then(function(d){
-    if(d&&d.status==='ok'&&render(d.items))return; throw 0;
+    if(!(d&&d.status==='ok'&&render(d.items)))throw 0;
   }).catch(function(){
     fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(gnews)).then(function(r){return r.text()}).then(function(x){
-      var doc=new DOMParser().parseFromString(x,'text/xml');
-      var its=[].slice.call(doc.querySelectorAll('item')).map(function(n){var t=n.querySelector('title'),l=n.querySelector('link');return {title:t?t.textContent:'',link:l?l.textContent:'#'};});
-      if(render(its))return; throw 0;
-    }).catch(function(){
-      var f=[['Radio-Canada — actualité','https://ici.radio-canada.ca/'],['État des routes — Québec 511','https://www.quebec511.info/'],['Météo Environnement Canada','https://meteo.gc.ca/'],['Actualités du Québec — Google News','https://news.google.com/search?q=Qu%C3%A9bec&hl=fr-CA']];
-      var h=f.concat(f).map(function(a){return '<a href="'+a[1]+'" target="_blank">'+a[0]+'</a>';}).join('');
-      track.innerHTML=h; box.style.display='block';
-    });
+      var its=[].slice.call(new DOMParser().parseFromString(x,'text/xml').querySelectorAll('item')).map(function(n){var t=n.querySelector('title'),l=n.querySelector('link');return {title:t?t.textContent:'',link:l?l.textContent:'#'};});
+      if(!render(its))throw 0;
+    }).catch(fallback);
   });
 })();
 
