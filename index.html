@@ -236,7 +236,7 @@ const STAGES=[
   plan:"Atterrissage le 10 au soir. Deux jours pour se poser, retrouver la famille et récupérer la voiture.",
   q:"Le Cantlie Hotel Suites Montréal",addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",tel:"+1 514-842-2000",conf:"2 studios · réf. 1087274036 & 1087277850",
   when:"Vol aller : French Bee BF760, Paris-Orly (T4) → Montréal, 19h20 → 21h00 (les 6). Bagages/pers. : 2 valises soute 23 kg + 1 cabine 12 kg. Dépose-bagages 4h avant.",
-  days:["<b>10 août (soir)</b> : arrivée 21h, installation au Cantlie.","<b>11 août</b> : récup voiture (Enterprise, 15h, 6100 Bd Décarie) · dépôt grosses valises + déjeuner chez Laval Hung (La Prairie) · 19h dîner chez Muyedine &amp; Majida Farès."],
+  days:["<b>10 août (soir)</b> : arrivée 21h, installation au Cantlie.","<b>11 août</b> : récup voiture (Enterprise, 15h, 6100 Bd Décarie) · dépôt grosses valises + déjeuner chez Laval Hung (La Prairie) · <b>19h dîner chez Muyedine &amp; Majida Farès — confirmé mardi 11 au soir</b> (lieu à préciser)."],
   around:"Autour du Cantlie : Mont-Royal, Musée des beaux-arts (300 m), rue Sainte-Catherine, campus McGill à pied, Vieux-Montréal en 15 min."},
  {emoji:"🛩️",title:"La Tuque — l'hydravion",start:"2026-08-12",end:"2026-08-12",lat:47.4370,lng:-72.7820,dates:"12 août · l'envol",transp:"hydravion",
   plan:"Route depuis Montréal le matin, puis on décolle en hydravion vers le Triton. Le grand frisson.",
@@ -287,7 +287,10 @@ const STAGES=[
   plan:"Penthouse de l'Hôtel Epik dans le Vieux-Montréal. On installe Hanaé à McGill. Nos derniers jours à six. 💛",
   q:"Hôtel Epik, 171 Rue Saint-Paul Ouest, Montréal",addr:"Hôtel Epik (Penthouse) — 171 rue Saint-Paul Ouest, Vieux-Montréal",tel:"+1 514-842-2634",conf:"Conf. 382059590 · check-in 15h",
   when:"24 août : retour du camping-car à Saint-Hubert (avant 11h30) · récup des valises chez Laval · check-in Epik 15h.",
-  days:["<b>28 août — early lunch chez Daniele Suisa &amp; sa famille</b> : <a target=\"_blank\" href=\"https://www.google.com/maps/search/?api=1&query=6941%20Avenue%20Monkland%20Montreal\">6941 avenue Monkland</a>, quartier NDG. Déjeuner tôt (après-midi = préparatifs).","🎁 <b>À rapporter de France</b> : un tube de Bion 3 Vitalité 50+ pour Daniele.","<b>29 août — départs</b> : Adalbert, Stella, Seyna &amp; Elie → Marrakech (Air Transat TS396, 18h20) · Kim-Louis → Paris (French Bee BF761, 23h) · Hanaé reste. Check-out 11h."],
+  days:["<b>Lun. 24 août — retour du camping-car &amp; installation</b> : rendre le van à Fraserway (Saint-Hubert) entre 8h30 et 11h30, prêt pour inspection (prévoir jusqu'à 1h) · navette/taxi vers Montréal · récupérer les grosses valises chez Laval Hung · check-in à l'Hôtel Epik à 15h.",
+   "<b>Mar. 25 → jeu. 27 août — McGill &amp; Vieux-Montréal</b> : installation de Hanaé dans son appartement (courses d'emménagement, découverte du quartier, campus McGill). Le reste du temps : Vieux-Port, basilique Notre-Dame, terrasses, une belle table en famille (Restaurant Limousine repéré).",
+   "<b>Ven. 28 août — déjeuner (early lunch) chez Daniele Suisa</b> : <a target=\"_blank\" href=\"https://www.google.com/maps/search/?api=1&query=6941%20Avenue%20Monkland%20Montreal\">6941 avenue Monkland</a>, quartier NDG. Tôt, car l'après-midi est réservé aux préparatifs du départ + derniers moments avec Hanaé. 🎁 Penser au tube de Bion 3 Vitalité 50+.",
+   "<b>Sam. 29 août — les départs</b> : check-out Epik 11h (bagages en consigne) · Adalbert, Stella, Seyna &amp; Elie → Marrakech (Air Transat TS396, 18h20, être à l'aéroport 3h avant = 15h20) · Kim-Louis → Paris (French Bee BF761, 23h) · <b>Hanaé reste à Montréal</b>. 💛"],
   around:"Vieux-Montréal à pied : Vieux-Port, basilique Notre-Dame, terrasses. Le campus de McGill pour la rentrée de Hanaé."}
 ];
 const COL={done:"#1f7a4d",today:"#c9741d",soon:"#2f6db0"};
@@ -411,9 +414,11 @@ const FAIRE=[
  "Permis de conduire international + carte de crédit au nom d'Adalbert",
  "Retour Air Transat : 1 valise 23 kg/pers seulement — acheter un bagage en + si besoin",
  "Campings &amp; activités : tout est déjà dans l'onglet Réservations. Roadbook complet en secours dans l'Espace Client Authentik",
- "Réserver les accès parcs SÉPAQ (Fjord, Oka) — inclus si on dort dans le parc",
+ "Accès parcs SÉPAQ : inclus (vous dormez DANS le Fjord et Oka) → rien à réserver. Payer seulement une visite de jour, ex. Chute Montmorency (~9 $/adulte).",
  "🎁 Rapporter de France un tube de Bion 3 Vitalité 50+ pour Daniele",
- "🚐 Régler le SOLDE Fraserway + check-in en ligne (identifiant 202620250 / mot de passe Frotier de Bagneux)",
+ "☎️ <b>URGENT — avant mercredi</b> : réserver la NAVETTE Fraserway du 18 août au <b>(514) 400-8845</b> (station Montréal). Le Cantlie n'est pas sur leur liste → demander le ramassage sur place ou au Best Western Ville-Marie (3407 Peel, à 5 min à pied). À faire 3-5 jours ouvrés avant.",
+ "🚐 Régler le SOLDE Fraserway (~CA$4 495,89 à faire confirmer) + check-in en ligne (identifiant 202620250 / mot de passe Frotier de Bagneux)",
+ "📞 Appeler les campings en direct pour un bel emplacement (32 pieds + slide-out, vue si possible) : Bon-Désir 418-232-6297 · SÉPAQ (Fjord &amp; Oka) 1-800-665-6527 · réf. dossier 0818-frotier-de-bagneux-MV",
  "Banque : plafonds relevés + caution camping-car 7 500 $ (RDV CIC)"
 ];
 const fc=document.getElementById('faire');
@@ -429,7 +434,7 @@ const PK={
 document.getElementById('pk').innerHTML=Object.entries(PK).map(([h,arr])=>'<h4>'+h+'</h4><ul>'+arr.map(x=>'<li>'+x+'</li>').join('')+'</ul>').join('');
 
 /* DOCS — contacts */
-const CT=[["Le Cantlie (Montréal)","514-842-2000"],["Aviation La Tuque (hydravion)","819-523-9616"],["Seigneurie du Triton","1-877-393-0557"],["Enterprise (voiture)","514-342-0010"],["Fraserway (camping-car)","604-527-1102"],["Baleines (Tadoussac)","418-579-8763"],["Hôtel Epik","514-842-2634"],["Air Transat","1-877-872-6728"],["Marion (Authentik)","514-769-0101 p.215"],["Adalbert (WhatsApp)","+212 661 399 838"]];
+const CT=[["Le Cantlie (Montréal)","514-842-2000"],["Aviation La Tuque (hydravion)","819-523-9616"],["Seigneurie du Triton","1-877-393-0557"],["Enterprise (voiture)","514-342-0010"],["Fraserway — station Montréal","514-400-8845"],["Fraserway — assistance route 24/7","1-604-636-3057"],["Fraserway — réservations","1-800-661-2441"],["Camping Bon-Désir (Tadoussac)","418-232-6297"],["SÉPAQ (parcs Fjord &amp; Oka)","1-800-665-6527"],["Baleines (Tadoussac)","418-579-8763"],["Hôtel Epik","514-842-2634"],["Air Transat","1-877-872-6728"],["Marion (Authentik)","514-769-0101 p.215"],["Adalbert (WhatsApp)","+212 661 399 838"]];
 document.getElementById('ct').innerHTML=CT.map(c=>'<a href="tel:'+c[1].replace(/[^0-9+]/g,'')+'"><span>'+c[0]+'</span><b>'+c[1]+'</b></a>').join('');
 
 /* METEO par etape (Open-Meteo, gratuit, sans cle) — se remplit a l approche */
