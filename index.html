@@ -261,7 +261,7 @@ const STAGES=[
  {emoji:"🚐",title:"Départ en camping-car",start:"2026-08-18",end:"2026-08-18",lat:45.4970,lng:-73.4040,dates:"18 août · on prend le van",transp:"camper",
   plan:"On récupère le camping-car, on charge, et cap sur Québec.",
   q:"Fraserway RV Rentals Montreal, Saint-Hubert",addr:"Fraserway RV — 8900 Chemin de Chambly, Saint-Hubert",tel:"+1 604-527-1102",conf:"Caution 7 500 $ bloquée sur la carte",
-  when:"Prise du camping-car 8h30-15h (taxi depuis le Cantlie). Retour prévu le 24 avant 11h30.",
+  when:"Prise du camping-car Fraserway 8h30-15h · navette gratuite depuis les hôtels de Montréal (réf. 202620250). Retour le 24 avant 11h30.",
   around:"Route 138 / autoroute 40 vers Québec. Premières courses avant de quitter la ville."},
  {emoji:"⚜️",title:"Région de Québec",start:"2026-08-18",end:"2026-08-20",lat:46.8571,lng:-71.2880,dates:"18 → 20 août · 2 nuits",transp:"camper",
   plan:"Camping de la Joie à Charlesbourg, base pour le Vieux-Québec et la chute Montmorency.",
@@ -301,6 +301,7 @@ const mapsUrl=s=>'https://www.google.com/maps/search/?api=1&query='+enc(s.q);
 const dirUrl=s=>'https://www.google.com/maps/dir/?api=1&destination='+enc(s.q);
 const earthUrl=s=>'https://earth.google.com/web/@'+s.lat+','+s.lng+',1500a,9000d,35y,0h,45t,0r';
 const wazeUrl=s=>'https://waze.com/ul?ll='+s.lat+','+s.lng+'&navigate=yes';
+const navRow=a=>'<div class="maplink"><a class="w" target="_blank" href="https://waze.com/ul?q='+enc(a)+'&navigate=yes">🚗 Waze</a><a class="i" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination='+enc(a)+'">🗺️ Google Maps</a></div>';
 
 /* ACCUEIL */
 (function(){
@@ -350,7 +351,7 @@ const HEB=[
 const hebIn='<div class="in">'+HEB.map(h=>'<div class="subcard"><div class="nm">'+h[0]+' '+h[1]+'</div><div class="dt">'+h[2]+'</div>'+
   '<div class="field"><span class="ic">📍</span><span>'+h[3]+'</span></div>'+
   '<div class="field"><span class="ic">✅</span><span>'+h[4]+'</span></div>'+
-  (h[5]?'<div class="field"><span class="ic">📞</span><span>'+h[5]+'</span></div>':'')+'</div>').join('')+'</div>';
+  (h[5]?'<div class="field"><span class="ic">📞</span><span>'+h[5]+'</span></div>':'')+navRow(h[3])+'</div>').join('')+'</div>';
 
 const volsIn='<div class="in">'+
  '<div class="subcard"><div class="nm">✈️ Aller — les 6</div><div class="dt">10 août</div>'+
@@ -372,13 +373,20 @@ const voitIn='<div class="in"><div class="field"><span class="ic">🚗</span><sp
  '<div class="field"><span class="ic">📍</span><span>Enterprise, 6100 Bd Décarie, Montréal.</span></div>'+
  '<div class="field"><span class="ic">✅</span><span>Conf. <b>2097899856</b> · ~829 $ réglés au comptoir + dépôt 300 $ · km illimité.</span></div>'+
  '<div class="field"><span class="ic">📞</span><span>+1 514-342-0010</span></div>'+
- '<div class="field"><span class="ic">💡</span><span>Permis + carte de crédit au nom d\'Adalbert exigés. Stella conductrice sans frais (présente + permis).</span></div></div>';
+ '<div class="field"><span class="ic">💡</span><span>Permis + carte de crédit au nom d\'Adalbert exigés. Stella conductrice sans frais (présente + permis).</span></div>'+navRow('Enterprise, 6100 Boulevard Décarie, Montréal')+'</div>';
 
-const campIn='<div class="in"><div class="field"><span class="ic">🚐</span><span>Fraserway C-XLarge · dossier 202620250 · prise/retour à Saint-Hubert (8900 Ch. de Chambly).</span></div>'+
- '<div class="field"><span class="ic">📅</span><span>Prise <b>18 août</b> (8h30-15h) → retour <b>24 août</b> (avant 11h30).</span></div>'+
- '<div class="field"><span class="ic">✅</span><span>Via Authentik / Marion — facture P162665, <b>1 591,26 € payés, solde 0</b>. Caution 7 500 $ bloquée sur la carte.</span></div>'+
- '<div class="field"><span class="ic">🎟️</span><span>Inclus : 4 campings + kayak de mer (21) + safari baleines (22). Roadbook &amp; vouchers : <a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client</a>.</span></div>'+
- '<div class="field"><span class="ic">📞</span><span>Fraserway +1 604-527-1102 · Marion +1 514-769-0101 p.215</span></div>'+
+const campIn='<div class="in">'+
+ '<div class="subcard"><div class="nm">🚐 Véhicule — Fraserway (réservé en direct)</div>'+
+ '<div class="field"><span class="ic">✅</span><span>Réservation <b>202620250</b> confirmée le 10 juil. — Class C X-Large, 6 pers. (rien à voir avec Authentik).</span></div>'+
+ '<div class="field"><span class="ic">📅</span><span>Prise <b>18 août</b> (8h30-15h) → retour <b>24 août</b> (8h30-11h30) · 1 400 km inclus.</span></div>'+
+ '<div class="field"><span class="ic">📍</span><span>Fraserway RV, 8900 Ch. de Chambly, Saint-Hubert · <b>navette gratuite</b> depuis les hôtels de Montréal.</span></div>'+
+ '<div class="field"><span class="ic">💳</span><span>Total ~3 746 $ CAD · dépôt 750 $ payé · <b class="warn">solde à régler via le check-in en ligne</b> (identifiant <b>202620250</b> / mot de passe <b>Frotier de Bagneux</b>). Pré-autorisation caution <b>7 500 $</b> à la prise.</span></div>'+
+ '<div class="field"><span class="ic">📞</span><span>Fraserway +1 604-527-1102 · 1-800-661-2441</span></div>'+
+ navRow('Fraserway RV Rentals, 8900 Chemin de Chambly, Saint-Hubert')+'</div>'+
+ '<div class="subcard"><div class="nm">🏕️ Campings &amp; activités — Authentik / Marion</div>'+
+ '<div class="field"><span class="ic">✅</span><span>Dossier <b>0818-frotier-de-bagneux-MV</b> · facture P162665 · <b>1 591,26 € payés, solde 0</b>.</span></div>'+
+ '<div class="field"><span class="ic">🎟️</span><span>Inclus : les 4 campings (détail dans Hébergements) + kayak de mer (21) + safari baleines (22).</span></div>'+
+ '<div class="field"><span class="ic">📞</span><span>Marion Vastesaeger +1 514-769-0101 p.215 · roadbook : <a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client</a></span></div></div>'+
  '<div class="subcard"><div class="nm">📸 Le véhicule — Fraserway Class C X-Large</div>'+
  '<img loading="lazy" alt="Camping-car extérieur" style="width:100%;border-radius:10px;margin-top:8px" src="https://rent.fraserway.com/dw/image/v2/BHGF_PRD/on/demandware.static/-/Sites-fraserway-master-catalog/default/dwd5e39fe7/images/rentals/Class%20C%20XLarge/August_2020_Fraseway_Rentals_ClassC_X-large_Edited_11.png?sw=1060&sh=680">'+
  '<img loading="lazy" alt="Intérieur" style="width:100%;border-radius:10px;margin-top:8px" src="https://rent.fraserway.com/dw/image/v2/BHGF_PRD/on/demandware.static/-/Sites-fraserway-master-catalog/default/dwdfd98a52/images/rentals/Class%20C%20XLarge/Rent_InteriorImages_ClassC_XLarge_1024PXx768PX_14.jpg?sw=1060&sh=680">'+
@@ -394,7 +402,7 @@ document.getElementById('rez').innerHTML=
  '<details class="acc"><summary><span class="e">🏨</span><div><div class="h">Hébergements</div><div class="s">8 lieux — tous réservés</div></div><span class="chev">›</span></summary>'+hebIn+'</details>'+
  '<details class="acc"><summary><span class="e">✈️</span><div><div class="h">Vols & bagages</div><div class="s">Aller 10 août · retours 29 août</div></div><span class="chev">›</span></summary>'+volsIn+'</details>'+
  '<details class="acc"><summary><span class="e">🚗</span><div><div class="h">Voiture</div><div class="s">Enterprise · 11-17 août</div></div><span class="chev">›</span></summary>'+voitIn+'</details>'+
- '<details class="acc"><summary><span class="e">🚐</span><div><div class="h">Camping-car</div><div class="s">Authentik · 18-24 août · payé</div></div><span class="chev">›</span></summary>'+campIn+'</details>';
+ '<details class="acc"><summary><span class="e">🚐</span><div><div class="h">Camping-car</div><div class="s">Fraserway (véhicule) + Authentik (campings)</div></div><span class="chev">›</span></summary>'+campIn+'</details>';
 
 /* DOCS — checklist */
 const FAIRE=[
@@ -405,6 +413,7 @@ const FAIRE=[
  "Campings &amp; activités : tout est déjà dans l'onglet Réservations. Roadbook complet en secours dans l'Espace Client Authentik",
  "Réserver les accès parcs SÉPAQ (Fjord, Oka) — inclus si on dort dans le parc",
  "🎁 Rapporter de France un tube de Bion 3 Vitalité 50+ pour Daniele",
+ "🚐 Régler le SOLDE Fraserway + check-in en ligne (identifiant 202620250 / mot de passe Frotier de Bagneux)",
  "Banque : plafonds relevés + caution camping-car 7 500 $ (RDV CIC)"
 ];
 const fc=document.getElementById('faire');
@@ -439,20 +448,28 @@ document.getElementById('ct').innerHTML=CT.map(c=>'<a href="tel:'+c[1].replace(/
   }).catch(function(){});
 })();
 
-/* ACTUS Quebec (Google News via proxy CORS, au mieux) */
+/* ACTUS Quebec — fil qui defile (rss2json fiable, secours allorigins, puis brèves) */
 (function(){
-  var rss='https://news.google.com/rss/search?q='+encodeURIComponent('Québec OR Montréal OR Tadoussac OR Charlevoix OR Saguenay')+'&hl=fr-CA&gl=CA&ceid=CA:fr';
-  var prox='https://api.allorigins.win/raw?url='+encodeURIComponent(rss);
   var box=document.getElementById('news'), track=document.getElementById('newstrack');
   if(!box||!track)return;
-  fetch(prox).then(function(r){return r.text()}).then(function(x){
-    var doc=new DOMParser().parseFromString(x,'text/xml');
-    var items=[].slice.call(doc.querySelectorAll('item')).slice(0,8);
-    if(!items.length)throw 0;
-    var html=items.map(function(it){var tn=it.querySelector('title'),ln=it.querySelector('link');var t=tn?tn.textContent:'';var l=ln?ln.textContent:'#';return '<a href="'+l+'" target="_blank">'+t.replace(/[<>]/g,'')+'</a>';}).join('');
-    track.innerHTML=html+html; box.style.display='block';
+  var gnews='https://news.google.com/rss/search?q='+encodeURIComponent('Québec OR Montréal OR Tadoussac OR Charlevoix OR Saguenay OR Mont-Tremblant')+'&hl=fr-CA&gl=CA&ceid=CA:fr';
+  function render(items){
+    if(!items||!items.length)return false;
+    var html=items.slice(0,10).map(function(it){var t=(it.title||'').replace(/[<>]/g,'');var l=it.link||'#';return '<a href="'+l+'" target="_blank">'+t+'</a>';}).join('');
+    track.innerHTML=html+html; box.style.display='block'; return true;
+  }
+  fetch('https://api.rss2json.com/v1/api.json?count=12&rss_url='+encodeURIComponent(gnews)).then(function(r){return r.json()}).then(function(d){
+    if(d&&d.status==='ok'&&render(d.items))return; throw 0;
   }).catch(function(){
-    track.innerHTML='<a href="https://news.google.com/search?q=Qu%C3%A9bec&hl=fr-CA" target="_blank">Actualités du Québec — ouvrir Google News</a>'; box.style.display='block';
+    fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(gnews)).then(function(r){return r.text()}).then(function(x){
+      var doc=new DOMParser().parseFromString(x,'text/xml');
+      var its=[].slice.call(doc.querySelectorAll('item')).map(function(n){var t=n.querySelector('title'),l=n.querySelector('link');return {title:t?t.textContent:'',link:l?l.textContent:'#'};});
+      if(render(its))return; throw 0;
+    }).catch(function(){
+      var f=[['Radio-Canada — actualité','https://ici.radio-canada.ca/'],['État des routes — Québec 511','https://www.quebec511.info/'],['Météo Environnement Canada','https://meteo.gc.ca/'],['Actualités du Québec — Google News','https://news.google.com/search?q=Qu%C3%A9bec&hl=fr-CA']];
+      var h=f.concat(f).map(function(a){return '<a href="'+a[1]+'" target="_blank">'+a[0]+'</a>';}).join('');
+      track.innerHTML=h; box.style.display='block';
+    });
   });
 })();
 
