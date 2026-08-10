@@ -186,6 +186,15 @@
       Camping-car Authentik payé (facture P162665, 1 591,26 €, solde 0). Le détail des campings et activités est dans l'onglet <b>Réservations</b> ; le roadbook complet reste en secours dans l'<a href="https://www.authentikcanada.com/fr/espace-client" target="_blank">Espace Client</a>.
     </div>
 
+    <h2 class="sec">🎓 Hanaé — son installation à Montréal</h2>
+    <div class="info">
+      <h3>📍 Son adresse à Montréal</h3>
+      <i>À compléter dès que connue</i> — appartement / résidence près de McGill.<br>
+      <b>McGill University</b> — 845 rue Sherbrooke Ouest, Montréal H3A 0G4 · +1 514-398-4455 · <a href="https://www.mcgill.ca" target="_blank">mcgill.ca</a>
+      <div class="d" style="margin-top:5px">📧 hdebagneux@gmail.com</div>
+    </div>
+    <div class="info faire"><div style="font-size:12px;color:var(--soft);margin-bottom:2px">Ses démarches, dans l'ordre — à cocher ensemble.</div><div id="hanae"></div></div>
+
     <h2 class="sec">✅ À faire avant le départ</h2>
     <div class="info faire"><div class="sub" style="font-size:12px;color:var(--soft);margin-bottom:2px">Coche au fur et à mesure — mémorisé sur ton téléphone.</div><div id="faire"></div></div>
 
@@ -233,10 +242,10 @@
 const TR={avion:{c:"#7a4bb0",l:"✈️ Vol"},voiture:{c:"#2f6db0",l:"🚗 Voiture"},hydravion:{c:"#c9741d",l:"🛩️ Hydravion"},camper:{c:"#0e8a8a",l:"🚐 Camping-car"},pied:{c:"#6d665c",l:"🚶 À pied / taxi"}};
 const STAGES=[
  {emoji:"🏙️",title:"Montréal — l'arrivée",start:"2026-08-10",end:"2026-08-12",lat:45.4976,lng:-73.5806,dates:"10 → 12 août · 2 nuits",transp:"avion",
-  plan:"Atterrissage le 10 au soir. Deux jours pour se poser, retrouver la famille et récupérer la voiture.",
+  plan:"Atterrissage le 10 à 22h (vol retardé). Deux jours pour se poser, retrouver la famille et récupérer la voiture.",
   q:"Le Cantlie Hotel Suites Montréal",addr:"Hôtel Le Cantlie — 1110 rue Sherbrooke Ouest, Montréal",tel:"+1 514-842-2000",conf:"2 studios · réf. 1087274036 & 1087277850",
-  when:"Vol aller : French Bee BF760, Paris-Orly (T4) → Montréal, 19h20 → 21h00 (les 6). Bagages/pers. : 2 valises soute 23 kg + 1 cabine 12 kg. Dépose-bagages 4h avant.",
-  days:["<b>10 août (soir)</b> : arrivée 21h, installation au Cantlie.","<b>11 août</b> : récup voiture (Enterprise, 15h, 6100 Bd Décarie) · dépôt grosses valises + déjeuner chez Laval Hung (La Prairie) · <b>19h dîner chez Muyedine &amp; Majida Farès — confirmé mardi 11 au soir</b> (lieu à préciser)."],
+  when:"⚠️ <b>VOL RETARDÉ</b> — French Bee BF760, Paris-Orly (T4) → Montréal : <b>départ 20h20, arrivée 22h00</b> (au lieu de 19h20/21h00). <b>L'enregistrement ferme à 18h50.</b> Dossiers : <b>GD4WR2</b> (Adalbert &amp; Stella) · <b>GD4JP7</b> (Hanaé, Seyna, Elie) · <b>GDP6B4</b> (Kim-Louis). Bagages/pers. : 2 valises soute 23 kg + 1 cabine 12 kg.",
+  days:["<b>10 août (soir)</b> : atterrissage <b>22h00</b> (vol retardé) · sortie de l'aéroport vers 23h-23h30 · Laval Hung vient nous chercher en deux voitures · installation au Cantlie.","<b>11 août</b> : récup voiture (Enterprise, 15h, 6100 Bd Décarie) · dépôt grosses valises + déjeuner chez Laval Hung (La Prairie) · <b>19h dîner chez Muyedine &amp; Majida Farès — confirmé mardi 11 au soir</b> (lieu à préciser)."],
   around:"Autour du Cantlie : Mont-Royal, Musée des beaux-arts (300 m), rue Sainte-Catherine, campus McGill à pied, Vieux-Montréal en 15 min."},
  {emoji:"🛩️",title:"La Tuque — l'hydravion",start:"2026-08-12",end:"2026-08-12",lat:47.4370,lng:-72.7820,dates:"12 août · l'envol",transp:"hydravion",
   plan:"Route depuis Montréal le matin, puis on décolle en hydravion vers le Triton. Le grand frisson.",
@@ -421,6 +430,20 @@ const FAIRE=[
  "📞 Appeler les campings en direct pour un bel emplacement (32 pieds + slide-out, vue si possible) : Bon-Désir 418-232-6297 · SÉPAQ (Fjord &amp; Oka) 1-800-665-6527 · réf. dossier 0818-frotier-de-bagneux-MV",
  "Banque : plafonds relevés + caution camping-car 7 500 $ (RDV CIC)"
 ];
+const HANAE=[
+ "📱 <b>Carte SIM canadienne</b> (le 11 au matin) — Centre Eaton, 705 Ste-Catherine O., 10 min à pied du Cantlie. Fizz ou Public Mobile ~20-35 $/mois. Apporter passeport + permis d'études + carte bancaire, téléphone débloqué.",
+ "🏦 <b>Ouvrir un compte bancaire canadien</b> (1ʳᵉ semaine) — comptes étudiants gratuits chez RBC, TD, Desjardins ou Scotiabank. Apporter passeport + permis d'études + lettre d'admission McGill + preuve d'adresse.",
+ "🎓 <b>McGill</b> : validation de l'inscription, carte étudiante, choix des cours, dates d'orientation",
+ "🩺 <b>Assurance santé</b> — vérifier la couverture obligatoire McGill (RAMQ ou plan étudiant international)",
+ "🏠 <b>Logement</b> : état des lieux, clés, wifi, électricité (Hydro-Québec), assurance habitation",
+ "🛏️ <b>Emménagement</b> : literie, ustensiles, petit électro — courses ensemble le 25-27 (IKEA, Canadian Tire, Winners)",
+ "📄 Scanner et sauvegarder : passeport, CAQ, permis d'études, bail, contrat SIM",
+ "📞 Donner son nouveau numéro canadien à toute la famille"
+];
+const hc=document.getElementById('hanae');
+if(hc){hc.innerHTML=HANAE.map(function(f,i){return '<label data-k="hanae_'+i+'"><input type="checkbox"><span>'+f+'</span></label>';}).join('');
+hc.querySelectorAll('label').forEach(function(l){var k=l.dataset.k,cb=l.querySelector('input');cb.checked=localStorage.getItem(k)==='1';l.classList.toggle('on',cb.checked);cb.addEventListener('change',function(){localStorage.setItem(k,cb.checked?'1':'0');l.classList.toggle('on',cb.checked);});});}
+
 const fc=document.getElementById('faire');
 fc.innerHTML=FAIRE.map((f,i)=>'<label data-k="todo_'+i+'"><input type="checkbox"><span>'+f+'</span></label>').join('');
 fc.querySelectorAll('label').forEach(l=>{const k=l.dataset.k,cb=l.querySelector('input');cb.checked=localStorage.getItem(k)==='1';l.classList.toggle('on',cb.checked);cb.addEventListener('change',()=>{localStorage.setItem(k,cb.checked?'1':'0');l.classList.toggle('on',cb.checked);});});
