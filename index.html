@@ -131,6 +131,15 @@
 </style>
 </head>
 <body>
+<div id="gate" style="position:fixed;inset:0;z-index:999;background:#1d1b17;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center">
+  <div style="font-size:44px">🍁</div>
+  <div style="font-size:20px;font-weight:700;margin-top:10px">Notre voyage</div>
+  <div style="font-size:13px;opacity:.7;margin-top:6px;max-width:280px">Québec 2026 · espace privé de la famille</div>
+  <input id="gcode" type="tel" inputmode="numeric" maxlength="4" placeholder="Code" style="margin-top:22px;width:150px;padding:14px;font-size:24px;text-align:center;letter-spacing:8px;border-radius:12px;border:none;font-family:inherit">
+  <button onclick="tryGate()" style="margin-top:14px;background:#c9741d;color:#fff;border:none;border-radius:12px;padding:13px 30px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer">Entrer</button>
+  <div id="gerr" style="font-size:13px;color:#e07a5f;margin-top:12px;height:18px"></div>
+</div>
+
 <div class="wrap">
   <header><h1>Notre voyage 🍁</h1><div class="sub">Québec · 10 → 29 août 2026</div></header>
 
@@ -237,6 +246,20 @@
   <button data-v="sos"><span class="e">🚨</span><span class="t">SOS</span></button>
 </nav>
 
+<script>
+function openGate(){var g=document.getElementById('gate');if(g)g.style.display='none';document.body.style.overflow='';}
+function tryGate(){
+  var v=(document.getElementById('gcode').value||'').trim();
+  if(v==='0311'){try{localStorage.setItem('vq_ok','1')}catch(e){}openGate();}
+  else{document.getElementById('gerr').textContent='Code incorrect';document.getElementById('gcode').value='';}
+}
+(function(){
+  try{if(localStorage.getItem('vq_ok')==='1'){openGate();return;}}catch(e){}
+  document.body.style.overflow='hidden';
+  var i=document.getElementById('gcode');
+  if(i){i.addEventListener('keydown',function(e){if(e.key==='Enter')tryGate();});setTimeout(function(){i.focus()},300);}
+})();
+</script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const TR={avion:{c:"#7a4bb0",l:"✈️ Vol"},voiture:{c:"#2f6db0",l:"🚗 Voiture"},hydravion:{c:"#c9741d",l:"🛩️ Hydravion"},camper:{c:"#0e8a8a",l:"🚐 Camping-car"},pied:{c:"#6d665c",l:"🚶 À pied / taxi"}};
