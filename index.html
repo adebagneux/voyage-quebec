@@ -154,9 +154,9 @@
       🎓 Retour à Montréal (24 → 29) pour McGill.
     </div>
     <div class="shortcuts">
+      <div class="sc" onclick="go('reservations')"><span class="e">🍽️</span>On mange où ?</div>
       <div class="sc" onclick="go('programme')"><span class="e">🗓️</span>Le programme</div>
       <div class="sc" onclick="go('carte')"><span class="e">🗺️</span>La carte</div>
-      <div class="sc" onclick="go('reservations')"><span class="e">🎫</span>Réservations</div>
       <div class="sc" onclick="go('docs')"><span class="e">📋</span>Docs &amp; à faire</div>
     </div>
   </section>
@@ -292,7 +292,7 @@ const STAGES=[
   around:"Dernière soirée « ville » : une bonne table dans le Vieux-Montréal (Restaurant Limousine repéré)."},
  {emoji:"🚐",title:"Départ en camping-car",start:"2026-08-18",end:"2026-08-18",lat:45.4970,lng:-73.4040,dates:"18 août · on prend le van",transp:"camper",
   plan:"On récupère le camping-car, on charge, et cap sur Québec.",
-  q:"Fraserway RV Rentals Montreal, Saint-Hubert",addr:"Fraserway RV — 8900 Chemin de Chambly, Saint-Hubert",tel:"+1 604-527-1102",conf:"Caution 7 500 $ bloquée sur la carte",
+  q:"Fraserway RV Rentals Montreal, Saint-Hubert",addr:"Fraserway RV — 8900 Chemin de Chambly, Saint-Hubert",tel:"+1 514-400-8845",conf:"Tout est payé · caution de 100 $ seulement",
   when:"Prise du camping-car Fraserway 8h30-15h · navette gratuite depuis les hôtels de Montréal (réf. 202620250). Retour le 24 avant 11h30.",
   around:"Route 138 / autoroute 40 vers Québec. Premières courses avant de quitter la ville."},
  {emoji:"⚜️",title:"Région de Québec",start:"2026-08-18",end:"2026-08-20",lat:46.8571,lng:-71.2880,dates:"18 → 20 août · 2 nuits",transp:"camper",
@@ -413,10 +413,10 @@ const voitIn='<div class="in"><div class="field"><span class="ic">🚗</span><sp
 const campIn='<div class="in">'+
  '<div class="subcard"><div class="nm">🚐 Véhicule — Fraserway (réservé en direct)</div>'+
  '<div class="field"><span class="ic">✅</span><span>Réservation <b>202620250</b> confirmée le 10 juil. — Class C X-Large, 6 pers. (rien à voir avec Authentik).</span></div>'+
- '<div class="field"><span class="ic">📅</span><span>Prise <b>18 août</b> (8h30-15h) → retour <b>24 août</b> (8h30-11h30) · 1 400 km inclus.</span></div>'+
- '<div class="field"><span class="ic">📍</span><span>Fraserway RV, 8900 Ch. de Chambly, Saint-Hubert · <b>navette gratuite</b> depuis les hôtels de Montréal.</span></div>'+
- '<div class="field"><span class="ic">💳</span><span><b class="warn">Solde à régler : CA$ 4 495,89</b> — via le check-in en ligne (identifiant <b>202620250</b> / mot de passe <b>Frotier de Bagneux</b>) sur rent.fraserway.com. Pré-autorisation de caution <b>7 500 $</b> en plus, à la prise du véhicule.</span></div>'+
- '<div class="field"><span class="ic">📞</span><span>Fraserway +1 604-527-1102 · 1-800-661-2441</span></div>'+
+ '<div class="field"><span class="ic">📅</span><span>Prise <b>18 août</b> (8h30-15h) → retour <b>24 août</b> (8h30-11h30) · <b>1 900 km inclus</b> (forfait +500 km ajouté).</span></div>'+
+ '<div class="field"><span class="ic">📍</span><span>Fraserway RV, 8900 Ch. de Chambly, Saint-Hubert · <b>navette gratuite</b> depuis Le Cantlie (heure confirmée 24-48h avant).</span></div>'+
+ '<div class="field"><span class="ic">💳</span><span><b>SOLDE ENTIÈREMENT PAYÉ</b> — virement CA$ 4 760,33 reçu et confirmé par Melody le 14 août. À l\'arrivée : <b>caution de 100 $ seulement</b> (CDR + CDW souscrits, aucune franchise pré-autorisée). Check-in en ligne : identifiant <b>202620250</b> / mot de passe <b>Frotier de Bagneux</b>.</span></div>'+
+ '<div class="field"><span class="ic">📞</span><span>Fraserway Montréal <b>+1 514-400-8845</b> · siège 1-800-661-2441</span></div>'+
  navRow('Fraserway RV Rentals, 8900 Chemin de Chambly, Saint-Hubert')+'</div>'+
  '<div class="subcard"><div class="nm">🏕️ Campings &amp; activités — Authentik / Marion</div>'+
  '<div class="field"><span class="ic">✅</span><span>Dossier <b>0818-frotier-de-bagneux-MV</b> · facture P162665 · <b>1 591,26 € payés, solde 0</b>.</span></div>'+
@@ -429,11 +429,41 @@ const campIn='<div class="in">'+
  '<div class="field" style="margin-top:9px"><span class="ic">🛏️</span><span>6 couchages : chambre séparée à l\'arrière + lit capucine + dinette &amp; sofa convertibles. 6 ceintures.</span></div>'+
  '<div class="field"><span class="ic">📏</span><span>Longueur ~9,1 à 9,9 m · largeur 2,54 m (rétros repliés) · <b>hauteur 3,35 m (11 pi) — attention aux passages bas et branches !</b></span></div>'+
  '<div class="field"><span class="ic">🔧</span><span>Châssis Ford, V8 essence, boîte automatique, régulateur, caméra de recul, clim (toit + cabine), chauffage, auvent, slide-out, génératrice, panneau solaire.</span></div>'+
- '<div class="field"><span class="ic">💧</span><span>Réservoirs : eau propre 132 L · eaux grises 121 L · eaux noires 101 L · carburant 208 L. À rendre : réservoirs vidés + même niveau de carburant.</span></div>'+
+ '<div class="field"><span class="ic">💧</span><span>Réservoirs : eau propre 132 L · eaux grises 121 L · eaux noires 101 L · carburant 208 L. <b>✅ Aucune vidange obligatoire au retour</b> — le forfait « Waste Tank Disposal Fee » est payé (confirmé par écrit par Graeme le 10 août). <b>Le plein de carburant, lui, reste obligatoire.</b></span></div>'+
  '<div class="field"><span class="ic">📖</span><span><a href="https://rent.fraserway.com/on/demandware.static/-/Sites-fraserway-master-catalog/default/dwa76e315c/images/rentals/Class%20C%20XLarge/Fraserway%20Manual%20C-XLarge%20FRA.pdf" target="_blank">Manuel du véhicule (PDF, FR)</a> · <a href="https://my.matterport.com/show/?m=wv54mLnnt8H" target="_blank">Visite virtuelle 360°</a></span></div>'+
  '</div></div>';
 
+/* TABLES — restaurants, repas réservés ou à réserver */
+const RESTOS=[
+ ["ok","🔥","C'est la Vie","Samedi 15 août · 21h00","708 rue de Saint-Jovite, Mont-Tremblant","819-681-0779","Cuisson sur pierre chaude à table. Chef-propriétaire Fabien Gilissen.","~15 min du condo · stationnement public gratuit au centre-ville"],
+ ["ok","🍽️","sEb l'Artisan Culinaire","Dimanche 16 août · 19h30","444 rue Saint-Georges, Mont-Tremblant","819-429-6991","Guide MICHELIN. Chef Sébastien Houle. Tenue décontractée.","~15 min du condo"],
+ ["todo","🥐","Déjeuner sur la route","Lundi 17 août · ~12h15","Sainte-Adèle ou Saint-Sauveur","","Halte entre Tremblant et Montréal. Aucune adresse arrêtée.",""],
+ ["todo","🪶","La Traite","Mardi 18 août · 19h45","5 Place de la Rencontre, Wendake","418-847-2012","Hôtel-Musée Premières Nations. Cuisine boréale autochtone : gibier, poissons, champignons et petits fruits sauvages. Plan B : Sagamité, 418-847-6999.","~15 min du Camping de la Joie"],
+ ["todo","🌲","Chez Boulay — bistro boréal","Mercredi 19 août · 18h30","1110 rue Saint-Jean, Québec","418-380-8166","Guide MICHELIN. Jean-Luc Boulay et Arnaud Marchand. Mar-sam 17h-21h45. Plans B : Chez Rioux &amp; Pettigrew 418-694-4448 · Le Clocher Penché 418-640-0597.","Vieux-Québec, en taxi depuis le camping"],
+ ["todo","🥞","Le Café du Quai","Jeudi 20 août · 18h00","358A rue Saint-Jean-Baptiste, L'Anse-Saint-Jean","418-608-8425","Crêperie bretonne + terroir québécois, terrasse sur la marina et le fjord. <b>Cuisine ferme à 20h — partir à 17h30.</b>","~25 min du camping du fjord"],
+ ["todo","🍺","Bistro de l'Anse / La Chasse-Pinte","Vendredi 21 août · 19h30","319 rue Saint-Jean-Baptiste, L'Anse-Saint-Jean","418-272-4222","Bières brassées sur place, terrasse sur le fjord. <b>Horaires contradictoires en ligne : téléphoner avant de se déplacer.</b>","~25 min du camping du fjord"],
+ ["todo","🐋","Bistro Henri — Auberge La Rosepierre","Samedi 22 août · 19h30","66 rue Principale, Grandes-Bergeronnes","418-232-6543","Mar-sam dès 17h. <b>5 min du camping, aucune route de nuit.</b><br>🎁 Ou la grande table : <b>Chez Mathilde</b>, 227 rue des Pionniers, Tadoussac, 418-235-4443 — Guide MICHELIN, menus dégustation, mais 22 km.","~5 min du Camping Bon-Désir"],
+ ["todo","🍻","Le Saint-Pub — MicroBrasserie Charlevoix","Dimanche 23 août · 11h45 (midi)","2 rue Racine, Baie-Saint-Paul","","Cuisine de pub soignée aux produits de Charlevoix. Ouvert dimanche 11h30-21h. <b>Pas de réservation par téléphone : en ligne via Libro, ou passage direct.</b><br>⛔ Le Mouton Noir est fermé le dimanche.","Coupure de la longue route"],
+ ["todo","🍷","Le Géraldine","Dimanche 23 août · 19h15","163 rue Saint-Eustache, Saint-Eustache","450-472-4441","Recommandé au Guide MICHELIN 2025 et 2026. Chef-propriétaire Benoit Brunet. <b>Apportez votre vin.</b> Mer-dim dès 17h.<br>⛔ Le bistro de l'Abbaye d'Oka ne fait que le brunch le dimanche.","~25 min du Parc d'Oka"],
+ ["todo","👨‍👩‍👧","Souper avec Laval Hung","Lundi 24 août · soir","Lieu à définir","","Chez lui à La Prairie, ou une table à Montréal ? À trancher avec Laval.",""],
+ ["ok","🎁","Déjeuner chez Daniele Suisa","Vendredi 28 août · midi","6941 avenue Monkland, NDG, Montréal","","Invitation acceptée. <b>Ne pas oublier le tube de Bion 3 Vitalité 50+ rapporté de France.</b>",""]
+];
+const restoIn='<div class="in">'+RESTOS.map(function(r){
+ var badge=r[0]==="ok"
+  ? '<span class="badge done" style="margin-left:auto">réservé</span>'
+  : '<span class="badge soon" style="margin-left:auto">à réserver</span>';
+ return '<div class="subcard"><div class="nm" style="display:flex;align-items:center;gap:6px">'+r[1]+' '+r[2]+badge+'</div>'+
+  '<div class="dt">'+r[3]+'</div>'+
+  '<div class="field"><span class="ic">📍</span><span>'+r[4]+'</span></div>'+
+  (r[5]?'<div class="field"><span class="ic">📞</span><span><a href="tel:'+r[5].replace(/[^0-9+]/g,'')+'">'+r[5]+'</a></span></div>':'')+
+  (r[6]?'<div class="field"><span class="ic">💡</span><span>'+r[6]+'</span></div>':'')+
+  (r[7]?'<div class="field"><span class="ic">🚗</span><span>'+r[7]+'</span></div>':'')+
+  (r[4].indexOf('à définir')<0&&r[4].indexOf('ou Saint-Sauveur')<0?navRow(r[4]):'')+
+  '</div>';
+}).join('')+'</div>';
+
 document.getElementById('rez').innerHTML=
+ '<details class="acc" open><summary><span class="e">🍽️</span><div><div class="h">Tables &amp; restaurants</div><div class="s">Où l\'on mange, chaque soir — adresse, téléphone, trajet</div></div><span class="chev">›</span></summary>'+restoIn+'</details>'+
  '<details class="acc"><summary><span class="e">🏨</span><div><div class="h">Hébergements</div><div class="s">8 lieux — tous réservés</div></div><span class="chev">›</span></summary>'+hebIn+'</details>'+
  '<details class="acc"><summary><span class="e">✈️</span><div><div class="h">Vols & bagages</div><div class="s">Aller 10 août · retours 29 août</div></div><span class="chev">›</span></summary>'+volsIn+'</details>'+
  '<details class="acc"><summary><span class="e">🚗</span><div><div class="h">Voiture</div><div class="s">Enterprise · 11-17 août</div></div><span class="chev">›</span></summary>'+voitIn+'</details>'+
@@ -448,10 +478,14 @@ const FAIRE=[
  "Campings &amp; activités : tout est déjà dans l'onglet Réservations. Roadbook complet en secours dans l'Espace Client Authentik",
  "Accès parcs SÉPAQ : inclus (vous dormez DANS le Fjord et Oka) → rien à réserver. Payer seulement une visite de jour, ex. Chute Montmorency (~9 $/adulte).",
  "🎁 Rapporter de France un tube de Bion 3 Vitalité 50+ pour Daniele",
- "☎️ <b>URGENT — avant mercredi</b> : réserver la NAVETTE Fraserway du 18 août au <b>(514) 400-8845</b> (station Montréal). Le Cantlie n'est pas sur leur liste → demander le ramassage sur place ou au Best Western Ville-Marie (3407 Peel, à 5 min à pied). À faire 3-5 jours ouvrés avant.",
- "🚐 Régler le SOLDE Fraserway (~CA$4 495,89 à faire confirmer) + check-in en ligne (identifiant 202620250 / mot de passe Frotier de Bagneux)",
- "📞 Appeler les campings en direct pour un bel emplacement (32 pieds + slide-out, vue si possible) : Bon-Désir 418-232-6297 · SÉPAQ (Fjord &amp; Oka) 1-800-665-6527 · réf. dossier 0818-frotier-de-bagneux-MV",
- "Banque : plafonds relevés + caution camping-car 7 500 $ (RDV CIC)"
+ "✅ <b>Navette Fraserway du 18 août : confirmée</b> par Fatou Coly — ramassage AU CANTLIE. L'heure exacte sera donnée 24-48h avant. Réception Fraserway (514) 400-8845.",
+ "✅ <b>Solde Fraserway : entièrement payé</b> (virement CA$4 760,33 reçu le 14 août). Caution à l'arrivée : 100 $ seulement.",
+ "💻 <b>Check-in en ligne Fraserway</b> — identifiant 202620250 / mot de passe Frotier de Bagneux · <b>avec les permis des DEUX conducteurs</b>",
+ "🪪 <b>Ajouter Stella comme conductrice autorisée</b> — chez Fraserway ET chez Enterprise (contrat 4LCT9L)",
+ "📵 <b>Télécharger les 4 zones Google Maps hors ligne</b> : Montréal/Oka · Québec/Charlevoix · Fjord/Tadoussac · Laurentides. <b>Waze ne fonctionne PAS hors connexion.</b>",
+ "🍽️ <b>Réserver les tables de la semaine camping-car</b> — la liste et les numéros sont dans l'onglet Réservations → Tables &amp; restaurants",
+ "⛔ <b>Dans Charlevoix : route 138, JAMAIS la 362</b> (côte des Éboulements, 213 m de dénivelé sur 2,1 km). Google et Waze proposeront la 362.",
+ "🫎 <b>Réserve des Laurentides (route 175) : traverser entre 10h et 16h</b> — corridor à orignaux, et 100 km sans station-service. Plein à Québec avant."
 ];
 const HANAE=[
  "📱 <b>Carte SIM canadienne</b> (le 11 au matin) — Centre Eaton, 705 Ste-Catherine O., 10 min à pied du Cantlie. Fizz ou Public Mobile ~20-35 $/mois. Apporter passeport + permis d'études + carte bancaire, téléphone débloqué.",
