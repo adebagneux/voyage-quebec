@@ -154,7 +154,7 @@
       🎓 Retour à Montréal (24 → 29) pour McGill.
     </div>
     <div class="shortcuts">
-      <div class="sc" onclick="go('reservations')"><span class="e">🍽️</span>On mange où ?</div>
+      <div class="sc" onclick="go('reservations')"><span class="e">🍽️</span>Nos tables</div>
       <div class="sc" onclick="go('programme')"><span class="e">🗓️</span>Le programme</div>
       <div class="sc" onclick="go('carte')"><span class="e">🗺️</span>La carte</div>
       <div class="sc" onclick="go('docs')"><span class="e">📋</span>Docs &amp; à faire</div>
@@ -463,7 +463,7 @@ const restoIn='<div class="in">'+RESTOS.map(function(r){
 }).join('')+'</div>';
 
 document.getElementById('rez').innerHTML=
- '<details class="acc" open><summary><span class="e">🍽️</span><div><div class="h">Tables &amp; restaurants</div><div class="s">Où l\'on mange, chaque soir — adresse, téléphone, trajet</div></div><span class="chev">›</span></summary>'+restoIn+'</details>'+
+ '<details class="acc" open><summary><span class="e">🍽️</span><div><div class="h">Nos tables</div><div class="s">Où nous déjeunons et dînons — adresse, téléphone, trajet</div></div><span class="chev">›</span></summary>'+restoIn+'</details>'+
  '<details class="acc"><summary><span class="e">🏨</span><div><div class="h">Hébergements</div><div class="s">8 lieux — tous réservés</div></div><span class="chev">›</span></summary>'+hebIn+'</details>'+
  '<details class="acc"><summary><span class="e">✈️</span><div><div class="h">Vols & bagages</div><div class="s">Aller 10 août · retours 29 août</div></div><span class="chev">›</span></summary>'+volsIn+'</details>'+
  '<details class="acc"><summary><span class="e">🚗</span><div><div class="h">Voiture</div><div class="s">Enterprise · 11-17 août</div></div><span class="chev">›</span></summary>'+voitIn+'</details>'+
